@@ -1,0 +1,157 @@
+// Mock data service for VFX Specs Form
+export const mockProjects = [
+  {
+    id: 1,
+    name: "Avengers Project",
+    lastModified: "2024-01-15",
+    data: {
+      companyInfo: {
+        companyName: "Marvel Studios",
+        companyEmail: "vfx@marvel.com",
+        companyAddress: "500 S Buena Vista St, Burbank, CA 91521",
+        companyWebsite: "https://marvel.com",
+        companyLogo: null
+      },
+      projectInfo: {
+        documentVersion: "v2.1",
+        projectDate: "2024-01-15",
+        projectTitle: "Avengers: Infinity Saga",
+        projectCodeName: "TITAN",
+        projectFormat: "Feature Film",
+        client: "Disney Studios",
+        director: "Russo Brothers",
+        dop: "Trent Opaloch",
+        productionCompany: "Marvel Studios",
+        postProductionSupervisor: "Dan DeLeeuw",
+        lab: "Company 3",
+        colorist: "Stefan Sonnenfeld",
+        vfxSupervisor: "Dan DeLeeuw",
+        vfxOnSetSupervisor: "Jesse James Chisholm",
+        vfxVendor: "Industrial Light & Magic",
+        vendorCodeName: "ILM",
+        vfxDocumentsLink: "https://marvel.com/vfx-docs",
+        projectFrameRate: "23.976fps",
+        colorScience: "ACES 1.3",
+        additionalNotes: "High-action sequences with extensive VFX work"
+      },
+      cameraFormats: [
+        {
+          id: 1,
+          cameraId: "Camera A",
+          sourceCamera: "Arri Alexa 35",
+          codec: "Arri Raw (HDE)",
+          sensorMode: "Open Gate (4608 x 3164)",
+          lensSqueezeeFactor: "1:1",
+          colorSpace: "ARRI - LogC4/AWG4"
+        },
+        {
+          id: 2,
+          cameraId: "Camera B",
+          sourceCamera: "RED V-Raptor",
+          codec: "RED Raw",
+          sensorMode: "UHD (3840 x 2160)",
+          lensSqueezeeFactor: "1:1",
+          colorSpace: "RED - Log3G10/REDWideGamutRGB"
+        }
+      ],
+      vfxPulls: {
+        fileFormat: "OpenEXR (.exr)",
+        compression: "ZIP",
+        resolution: "4096x2160",
+        colorSpace: "ACEScg",
+        bitDepth: "16-bit half float",
+        frameHandles: 8,
+        framePadding: "####",
+        vfxLutsLink: "https://marvel.com/luts",
+        showId: "AVG",
+        episode: "001",
+        sequence: "010",
+        scene: "020",
+        shotId: "0100",
+        plate: "PL01",
+        identifier: "01",
+        version: "v001"
+      },
+      mediaReview: {
+        container: "mov",
+        videoCodec: "ProRes 422 HQ",
+        resolution: "1920x1080",
+        aspectRatio: "2.39:1",
+        letterboxing: "1920x810",
+        frameRate: "23.976",
+        colorSpace: "Rec709, CDL and Show LUT Baked in",
+        slateOverlaysLink: "https://marvel.com/slate"
+      },
+      vfxDeliveries: {
+        showId: "AVG",
+        episode: "001",
+        sequence: "010",
+        scene: "020",
+        shotId: "0100",
+        task: "comp",
+        vendorCodeName: "ILM",
+        version: "v001"
+      }
+    }
+  }
+];
+
+export const dropdownOptions = {
+  projectFormat: ["Feature Film", "Television", "Commercial", "Music Video", "Documentary", "Short Film"],
+  frameRate: ["23.976fps", "24fps", "25fps", "29.97fps", "30fps", "50fps", "59.94fps", "60fps"],
+  colorScience: ["ACES 1.3", "ACES 1.2", "ACES 1.1", "ACES 1.0", "Rec. 709", "DCI-P3", "Adobe RGB"],
+  sourceCamera: ["Arri Alexa 35", "Arri Alexa Mini", "Arri Alexa Mini LF", "Arri Alexa LF", "RED V-Raptor", "RED Komodo", "Sony FX9", "Sony FX6", "Canon C300 Mark III", "Canon C500 Mark II", "Blackmagic URSA Mini Pro 12K"],
+  codec: ["Arri Raw (HDE)", "ProRes 4444 XQ", "ProRes 4444", "ProRes 422 HQ", "ProRes 422", "ProRes 422 LT", "ProRes 422 Proxy", "RED Raw", "BRAW", "XAVC-I", "DNxHR 444", "DNxHR HQX", "DNxHR HQ"],
+  sensorMode: ["Open Gate (4608 x 3164)", "UHD (3840 x 2160)", "2.39:1 (4448 x 1856)", "16:9 (3840 x 2160)", "4:3 (4096 x 3072)", "Full Frame (4096 x 3072)", "S35 (3424 x 2202)", "2K (2048 x 1080)"],
+  lensSqueezeeFactor: ["1:1", "1.25:1", "1.33:1", "1.5:1", "1.65:1", "1.8:1", "2:1"],
+  cameraColorSpace: ["ARRI - LogC4/AWG4", "ARRI - LogC3/AWG3", "RED - Log3G10/REDWideGamutRGB", "Sony - S-Log3/S-Gamut3.Cine", "Canon - C-Log3/Cinema Gamut", "Blackmagic - Film/Wide Gamut", "Rec. 709", "sRGB"],
+  vfxFileFormat: ["OpenEXR (.exr)", "TIFF (.tiff)", "PNG (.png)", "JPEG (.jpg)", "DPX (.dpx)", "Cineon (.cin)"],
+  compression: ["ZIP", "PIZ", "RLE", "PXR24", "B44", "B44A", "DWAA", "DWAB", "None"],
+  vfxColorSpace: ["ACEScg", "ACES2065-1", "Rec. 709", "sRGB", "Adobe RGB", "P3-D65", "Rec. 2020"],
+  bitDepth: ["16-bit half float", "32-bit float", "10-bit", "12-bit", "16-bit integer"],
+  framePadding: ["####", "#####", "######", "%04d", "%05d", "%06d"],
+  plate: ["PL (plate)", "CP (clean plate)", "EL (element)", "RF (reference)", "GS (green screen)", "CC (color chart)", "LG (lens grid)"],
+  container: ["mov", "mp4", "avi", "mxf", "mkv"],
+  videoCodec: ["ProRes 422 HQ", "ProRes 4444", "ProRes 422", "H.264", "H.265/HEVC", "DNxHD", "DNxHR"]
+};
+
+export const templateService = {
+  saveTemplate: (name, data) => {
+    const templates = JSON.parse(localStorage.getItem('vfxTemplates') || '[]');
+    const template = {
+      id: Date.now(),
+      name,
+      data,
+      createdAt: new Date().toISOString()
+    };
+    templates.push(template);
+    localStorage.setItem('vfxTemplates', JSON.stringify(templates));
+    return template;
+  },
+  
+  getTemplates: () => {
+    return JSON.parse(localStorage.getItem('vfxTemplates') || '[]');
+  },
+  
+  deleteTemplate: (id) => {
+    const templates = JSON.parse(localStorage.getItem('vfxTemplates') || '[]');
+    const filtered = templates.filter(t => t.id !== id);
+    localStorage.setItem('vfxTemplates', JSON.stringify(filtered));
+  },
+  
+  loadTemplate: (id) => {
+    const templates = JSON.parse(localStorage.getItem('vfxTemplates') || '[]');
+    return templates.find(t => t.id === id);
+  }
+};
+
+export const generateFilename = (type, data) => {
+  switch(type) {
+    case 'vfxPulls':
+      return `${data.showId}_${data.episode}_${data.sequence}_${data.scene}_${data.shotId}_${data.plate}_${data.version}.${data.framePadding}.exr`;
+    case 'vfxDeliveries':
+      return `${data.showId}_${data.episode}_${data.sequence}_${data.scene}_${data.shotId}_${data.task}_${data.vendorCodeName}_${data.version}.${data.framePadding}.exr`;
+    default:
+      return 'unnamed_file.exr';
+  }
+};
