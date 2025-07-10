@@ -2,45 +2,12 @@ import React, { useState, useRef } from 'react';
 import { Upload, X, Image } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
+import { logoAPI } from '../services/api';
 
 const LogoUpload = ({ label, value, onChange, className = "" }) => {
   const [dragActive, setDragActive] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const inputRef = useRef(null);
-
-  const resizeImage = (file) => {
-    return new Promise((resolve) => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      const img = new Image();
-      
-      img.onload = () => {
-        // Calculate new dimensions (maintain aspect ratio, 128px height)
-        const targetHeight = 128;
-        const aspectRatio = img.width / img.height;
-        const targetWidth = targetHeight * aspectRatio;
-        
-        canvas.width = targetWidth;
-        canvas.height = targetHeight;
-        
-        ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
-        
-        canvas.toBlob((blob) => {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            resolve({
-              dataUrl: e.target.result,
-              width: targetWidth,
-              height: targetHeight
-            });
-          };
-          reader.readAsDataURL(blob);
-        }, 'image/png', 0.9);
-      };
-      
-      img.src = URL.createObjectURL(file);
-    });
-  };
 
   const handleFile = async (file) => {
     if (!file || !file.type.startsWith('image/')) {
@@ -51,8 +18,8 @@ const LogoUpload = ({ label, value, onChange, className = "" }) => {
     setIsProcessing(true);
     
     try {
-      const resizedImage = await resizeImage(file);
-      onChange(resizedImage);
+      const processedImage = await logoAPI.process(file);
+      onChange(processedImage);
     } catch (error) {
       console.error('Error processing image:', error);
       alert('Error processing image. Please try again.');
