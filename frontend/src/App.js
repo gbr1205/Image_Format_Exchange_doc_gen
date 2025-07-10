@@ -445,6 +445,7 @@ const VFXSpecsForm = () => {
           <TabsContent value="delivery" className="space-y-6">
             <VFXDeliveries 
               data={formData.vfxDeliveries} 
+              vfxPullsData={formData.vfxPulls}
               onChange={handleSectionChange}
             />
           </TabsContent>
