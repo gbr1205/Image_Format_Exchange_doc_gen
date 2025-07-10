@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { FileText, Package } from 'lucide-react';
-import { generateFilename } from '../services/api';
+import { generateFilename } from '../../services/api';
 
 const VFXDeliveries = ({ data, onChange }) => {
   const handleChange = (field, value) => {
