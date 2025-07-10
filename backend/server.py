@@ -185,7 +185,11 @@ async def process_logo(file: UploadFile = File(...)):
         
         # Read image
         image_data = await file.read()
-        image = Image.open(io.BytesIO(image_data))
+        
+        try:
+            image = Image.open(io.BytesIO(image_data))
+        except Exception:
+            raise HTTPException(status_code=400, detail="Invalid image file")
         
         # Calculate new dimensions (maintain aspect ratio, 128px height)
         target_height = 128
@@ -214,6 +218,8 @@ async def process_logo(file: UploadFile = File(...)):
             "height": target_height
         }
         
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
