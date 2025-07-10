@@ -14,10 +14,6 @@ import {
   Settings, 
   Eye, 
   Folder,
-  Camera,
-  Monitor,
-  Layers,
-  Film,
   Building2,
   Sparkles
 } from 'lucide-react';
