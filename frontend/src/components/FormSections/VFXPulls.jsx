@@ -5,7 +5,7 @@ import { Label } from '../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Badge } from '../ui/badge';
 import { Layers, FileText } from 'lucide-react';
-import { dropdownOptions, generateFilename } from '../../services/mockData';
+import { generateFilename } from '../../services/api';
 
 const VFXPulls = ({ data, onChange }) => {
   const handleChange = (field, value) => {
