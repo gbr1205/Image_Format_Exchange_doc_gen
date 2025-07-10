@@ -39,6 +39,7 @@ class ProjectInfo(BaseModel):
     vfxDocumentsLink: Optional[str] = None
     projectFrameRate: Optional[str] = None
     colorScience: Optional[str] = None
+    customColorScience: Optional[str] = None
     additionalNotes: Optional[str] = None
 
 class CameraFormat(BaseModel):
