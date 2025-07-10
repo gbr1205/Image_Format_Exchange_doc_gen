@@ -28,7 +28,7 @@ import CameraFormats from './components/FormSections/CameraFormats';
 import VFXPulls from './components/FormSections/VFXPulls';
 import MediaReview from './components/FormSections/MediaReview';
 import VFXDeliveries from './components/FormSections/VFXDeliveries';
-import { mockProjects, templateService } from './services/mockData';
+import { vfxSpecsAPI, templatesAPI, exportAPI, dropdownAPI } from './services/api';
 
 import './App.css';
 
@@ -37,31 +37,83 @@ const VFXSpecsForm = () => {
   const [formData, setFormData] = useState({
     companyInfo: {},
     projectInfo: {},
-    cameraFormats: [{ id: 1, cameraId: 'Camera A', sourceCamera: 'Arri Alexa 35', codec: 'Arri Raw (HDE)', sensorMode: 'Open Gate (4608 x 3164)', lensSqueezeeFactor: '1:1', colorSpace: 'ARRI - LogC4/AWG4' }],
-    vfxPulls: { frameHandles: 8, framePadding: '####', showId: '', episode: '', shotId: '', plate: 'PL01', identifier: '01', version: 'v001' },
-    mediaReview: { container: 'mov', videoCodec: 'ProRes 422 HQ', resolution: '1920x1080', aspectRatio: '2.20:1', letterboxing: '1920x872', frameRate: '23.976', colorSpace: 'Rec709, CDL and Show LUT Baked in' },
-    vfxDeliveries: { showId: '', episode: '', shotId: '', task: 'comp', vendorCodeName: '', version: 'v001' }
+    cameraFormats: [{ 
+      id: 1, 
+      cameraId: 'Camera A', 
+      sourceCamera: 'Arri Alexa 35', 
+      codec: 'Arri Raw (HDE)', 
+      sensorMode: 'Open Gate (4608 x 3164)', 
+      lensSqueezeeFactor: '1:1', 
+      colorSpace: 'ARRI - LogC4/AWG4' 
+    }],
+    vfxPulls: { 
+      frameHandles: 8, 
+      framePadding: '####', 
+      showId: '', 
+      episode: '', 
+      shotId: '', 
+      plate: 'PL01', 
+      identifier: '01', 
+      version: 'v001' 
+    },
+    mediaReview: { 
+      container: 'mov', 
+      videoCodec: 'ProRes 422 HQ', 
+      resolution: '1920x1080', 
+      aspectRatio: '2.20:1', 
+      letterboxing: '1920x872', 
+      frameRate: '23.976', 
+      colorSpace: 'Rec709, CDL and Show LUT Baked in' 
+    },
+    vfxDeliveries: { 
+      showId: '', 
+      episode: '', 
+      shotId: '', 
+      task: 'comp', 
+      vendorCodeName: '', 
+      version: 'v001' 
+    }
   });
 
   const [templates, setTemplates] = useState([]);
   const [activeTab, setActiveTab] = useState('company');
   const [completionProgress, setCompletionProgress] = useState(0);
+  const [currentSpecId, setCurrentSpecId] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    loadTemplates();
-    // Load sample data
-    if (mockProjects.length > 0) {
-      setFormData(mockProjects[0].data);
-    }
+    initializeApp();
   }, []);
 
   useEffect(() => {
     calculateProgress();
   }, [formData]);
 
-  const loadTemplates = () => {
-    const savedTemplates = templateService.getTemplates();
-    setTemplates(savedTemplates);
+  const initializeApp = async () => {
+    try {
+      await loadTemplates();
+      await loadDropdownOptions();
+    } catch (error) {
+      console.error('Error initializing app:', error);
+    }
+  };
+
+  const loadTemplates = async () => {
+    try {
+      const templateList = await templatesAPI.getAll();
+      setTemplates(templateList);
+    } catch (error) {
+      console.error('Error loading templates:', error);
+    }
+  };
+
+  const loadDropdownOptions = async () => {
+    try {
+      const options = await dropdownAPI.getOptions();
+      // Store in a context or state management system if needed
+    } catch (error) {
+      console.error('Error loading dropdown options:', error);
+    }
   };
 
   const calculateProgress = () => {
@@ -95,42 +147,111 @@ const VFXSpecsForm = () => {
     }));
   };
 
-  const handleSaveTemplate = () => {
+  const handleSaveTemplate = async () => {
     const templateName = prompt('Enter template name:');
     if (templateName) {
-      templateService.saveTemplate(templateName, formData);
-      loadTemplates();
-      toast({
-        title: 'Template Saved',
-        description: `Template "${templateName}" saved successfully!`,
-      });
+      try {
+        setLoading(true);
+        await templatesAPI.create(templateName, formData);
+        await loadTemplates();
+        toast({
+          title: 'Template Saved',
+          description: `Template "${templateName}" saved successfully!`,
+        });
+      } catch (error) {
+        console.error('Error saving template:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to save template. Please try again.',
+          variant: 'destructive',
+        });
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
-  const handleLoadTemplate = (templateId) => {
-    const template = templateService.loadTemplate(templateId);
-    if (template) {
-      setFormData(template.data);
+  const handleLoadTemplate = async (templateId) => {
+    try {
+      setLoading(true);
+      const template = await templatesAPI.getById(templateId);
+      if (template) {
+        setFormData(template.data);
+        toast({
+          title: 'Template Loaded',
+          description: `Template "${template.name}" loaded successfully!`,
+        });
+      }
+    } catch (error) {
+      console.error('Error loading template:', error);
       toast({
-        title: 'Template Loaded',
-        description: `Template "${template.name}" loaded successfully!`,
+        title: 'Error',
+        description: 'Failed to load template. Please try again.',
+        variant: 'destructive',
       });
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleExport = (format) => {
-    toast({
-      title: 'Export Started',
-      description: `Generating ${format.toUpperCase()} export...`,
-    });
-    
-    // Mock export functionality
-    setTimeout(() => {
+  const handleExport = async (format) => {
+    try {
+      setLoading(true);
+      toast({
+        title: 'Export Started',
+        description: `Generating ${format.toUpperCase()} export...`,
+      });
+      
+      if (format === 'pdf') {
+        await exportAPI.toPDF(formData);
+      } else if (format === 'docx') {
+        await exportAPI.toDOCX(formData);
+      }
+      
       toast({
         title: 'Export Complete',
-        description: `${format.toUpperCase()} file ready for download!`,
+        description: `${format.toUpperCase()} file downloaded successfully!`,
       });
-    }, 2000);
+    } catch (error) {
+      console.error('Error exporting:', error);
+      toast({
+        title: 'Export Error',
+        description: 'Failed to export document. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSaveSpec = async () => {
+    try {
+      setLoading(true);
+      
+      if (currentSpecId) {
+        await vfxSpecsAPI.update(currentSpecId, formData);
+        toast({
+          title: 'Specification Updated',
+          description: 'VFX specification updated successfully!',
+        });
+      } else {
+        const newSpec = await vfxSpecsAPI.create(formData);
+        setCurrentSpecId(newSpec.id);
+        toast({
+          title: 'Specification Saved',
+          description: 'VFX specification saved successfully!',
+        });
+      }
+    } catch (error) {
+      console.error('Error saving specification:', error);
+      toast({
+        title: 'Save Error',
+        description: 'Failed to save specification. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getTabIcon = (tab) => {
