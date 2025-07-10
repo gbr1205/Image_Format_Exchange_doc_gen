@@ -3,8 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Textarea } from '../ui/textarea';
 import { Badge } from '../ui/badge';
-import { Layers, FileText } from 'lucide-react';
+import { Layers, FileText, Clapperboard } from 'lucide-react';
 import { dropdownOptions } from '../../services/mockData';
 import { generateFilename } from '../../services/api';
 
@@ -56,7 +57,7 @@ const VFXPulls = ({ data, onChange }) => {
               </Label>
               <Select value={data.compression || ''} onValueChange={(value) => handleChange('compression', value)}>
                 <SelectTrigger className="transition-all duration-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
-                  <SelectValue placeholder="ZIP" />
+                  <SelectValue placeholder="ZIP1" />
                 </SelectTrigger>
                 <SelectContent>
                   {dropdownOptions.compression.map(comp => (
@@ -72,12 +73,16 @@ const VFXPulls = ({ data, onChange }) => {
               <Label className="text-sm font-medium text-gray-700">
                 Resolution <span className="text-red-500">*</span>
               </Label>
-              <Input
-                placeholder="4096x2160"
-                value={data.resolution || ''}
-                onChange={(e) => handleChange('resolution', e.target.value)}
-                className="transition-all duration-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-              />
+              <Select value={data.resolution || ''} onValueChange={(value) => handleChange('resolution', value)}>
+                <SelectTrigger className="transition-all duration-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+                  <SelectValue placeholder="4096 x 2160 (4K)" />
+                </SelectTrigger>
+                <SelectContent>
+                  {dropdownOptions.resolution.map(res => (
+                    <SelectItem key={res} value={res}>{res}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             
             <div className="space-y-2">
@@ -116,7 +121,7 @@ const VFXPulls = ({ data, onChange }) => {
             
             <div className="space-y-2">
               <Label className="text-sm font-medium text-gray-700">
-                Frame Handles <span className="text-red-500">*</span>
+                Frame Handles <span className="text-red-500">*</span> (2x value, head + tail)
               </Label>
               <Input
                 type="number"
@@ -148,11 +153,12 @@ const VFXPulls = ({ data, onChange }) => {
             <Label className="text-sm font-medium text-gray-700">
               VFX LUTs Link
             </Label>
-            <Input
+            <Textarea
               placeholder="https://luts.link"
               value={data.vfxLutsLink || ''}
               onChange={(e) => handleChange('vfxLutsLink', e.target.value)}
-              className="transition-all duration-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+              className="transition-all duration-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 min-h-[60px]"
+              rows={2}
             />
           </div>
         </div>
@@ -233,7 +239,7 @@ const VFXPulls = ({ data, onChange }) => {
               </Label>
               <Select value={data.plate || ''} onValueChange={(value) => handleChange('plate', value)}>
                 <SelectTrigger className="transition-all duration-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
-                  <SelectValue placeholder="PL01" />
+                  <SelectValue placeholder="PL" />
                 </SelectTrigger>
                 <SelectContent>
                   {dropdownOptions.plate.map(plate => (
@@ -277,6 +283,44 @@ const VFXPulls = ({ data, onChange }) => {
           </div>
           <div className="font-mono text-sm bg-white p-2 rounded border">
             {filename}
+          </div>
+        </div>
+
+        {/* Layer Definitions */}
+        <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+          <h4 className="font-semibold text-blue-800 mb-2">Layer Definitions</h4>
+          <div className="text-sm text-blue-700 space-y-1">
+            <p>"PL (plate)", "CP (clean plate)", "EL (element)", "RF (reference)", "GS (green screen)", "CC (color chart)", "LG (lens grid)"</p>
+          </div>
+        </div>
+
+        {/* VFX Work Section */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 mb-4">
+            <Clapperboard className="h-5 w-5 text-orange-600" />
+            <h3 className="font-semibold text-gray-800">VFX Work</h3>
+          </div>
+          
+          <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
+            <div className="flex items-center justify-center h-32 bg-white rounded border-2 border-dashed border-purple-300 mb-4">
+              <p className="text-purple-600 text-sm font-medium">The Foundry's Nuke 16.0v2 colorspace settings example</p>
+            </div>
+            
+            <div className="text-sm text-purple-800 space-y-3">
+              <p className="font-medium">Outputs for WIPs, Review, and Deliveries should bypass and preserve VFX Pull's tech-specs and folder structure, Ex:</p>
+              
+              <div className="bg-white p-3 rounded border">
+                <p className="font-mono text-xs mb-2">
+                  "Pull Shot" {data.showId || 'AAA'}_{data.episode || '101'}_{data.sequence || '001'}_{data.scene || '001'}_{data.shotId || '0010'}_{data.plate || 'PL'}{data.identifier || '01'}_{data.version || 'v001'} folder &gt; {data.resolution?.split(' ')[0] || '4608x3164'} folder &gt;  OpenEXR sequenced files, 1001-1101 frame-range, compression {data.compression || 'ZIP1'}, Bit Depth{data.bitDepth || '16-bit half float'}, colorspace {data.colorSpace || 'ACES2065-1 (Ap0)'}.
+                </p>
+              </div>
+              
+              <div className="bg-white p-3 rounded border">
+                <p className="font-mono text-xs">
+                  "VFX Shot" {data.showId || 'AAA'}_{data.episode || '101'}_{data.sequence || '001'}_{data.scene || '001'}_{data.shotId || '0010'}_comp_VEND_{data.version || 'v001'} folder &gt; {data.resolution?.split(' ')[0] || '4608x3164'} folder &gt;  OpenEXR sequenced files, 1001-1101 frame-range, compression {data.compression || 'ZIP1'}, Bit Depth{data.bitDepth || '16-bit half float'}, colorspace {data.colorSpace || 'ACES2065-1 (Ap0)'}.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </CardContent>
