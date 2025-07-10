@@ -308,15 +308,35 @@ const VFXSpecsForm = () => {
             </div>
             
             <div className="flex gap-2">
-              <Button variant="outline" onClick={handleSaveTemplate}>
+              <Button 
+                variant="outline" 
+                onClick={handleSaveSpec}
+                disabled={loading}
+              >
                 <Save className="h-4 w-4 mr-2" />
+                {currentSpecId ? 'Update' : 'Save'} Spec
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={handleSaveTemplate}
+                disabled={loading}
+              >
+                <Folder className="h-4 w-4 mr-2" />
                 Save Template
               </Button>
-              <Button variant="outline" onClick={() => handleExport('pdf')}>
+              <Button 
+                variant="outline" 
+                onClick={() => handleExport('pdf')}
+                disabled={loading}
+              >
                 <Download className="h-4 w-4 mr-2" />
                 Export PDF
               </Button>
-              <Button variant="outline" onClick={() => handleExport('docx')}>
+              <Button 
+                variant="outline" 
+                onClick={() => handleExport('docx')}
+                disabled={loading}
+              >
                 <FileText className="h-4 w-4 mr-2" />
                 Export DOCX
               </Button>
