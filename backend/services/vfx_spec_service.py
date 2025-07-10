@@ -94,7 +94,7 @@ class VFXSpecService:
         try:
             template = Template(**template_data.dict())
             result = await self.templates_collection.insert_one(template.dict())
-            template.id = str(result.inserted_id)
+            # Don't overwrite the UUID - keep the original template.id
             return template
         except Exception as e:
             logger.error(f"Error creating template: {str(e)}")
