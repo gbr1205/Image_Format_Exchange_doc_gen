@@ -29,8 +29,9 @@ class VFXSpecService:
                     "colorSpace": "ARRI - LogC4/AWG4"
                 }]
             
+            # Insert the spec with its UUID as the id field
             result = await self.collection.insert_one(spec.dict())
-            spec.id = str(result.inserted_id)
+            # Don't overwrite the UUID - keep the original spec.id
             return spec
         except Exception as e:
             logger.error(f"Error creating VFX spec: {str(e)}")
