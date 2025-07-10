@@ -290,7 +290,7 @@ const VFXSpecsForm = () => {
             </div>
             <div>
               <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-                VFX Specs Exchange
+                IMAGE FORMAT EXCHANGE SPECS
               </h1>
               <p className="text-gray-600 mt-1">Technical Consistency Across Processes</p>
             </div>
