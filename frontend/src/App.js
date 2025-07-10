@@ -375,10 +375,10 @@ const VFXSpecsForm = () => {
         {/* Main Form */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-6 bg-white border shadow-sm">
-            <TabsTrigger value="company" className="flex items-center gap-2 data-[state=active]:bg-blue-50">
-              {getTabIcon('company')}
-              <span className="hidden sm:inline">Company</span>
-              <Badge variant={getTabStatus('company') === 'complete' ? 'default' : 'secondary'} className="ml-1 h-2 w-2 p-0 rounded-full" />
+            <TabsTrigger value="letterhead" className="flex items-center gap-2 data-[state=active]:bg-blue-50">
+              {getTabIcon('letterhead')}
+              <span className="hidden sm:inline">Letterhead</span>
+              <Badge variant={getTabStatus('letterhead') === 'complete' ? 'default' : 'secondary'} className="ml-1 h-2 w-2 p-0 rounded-full" />
             </TabsTrigger>
             <TabsTrigger value="project" className="flex items-center gap-2 data-[state=active]:bg-green-50">
               {getTabIcon('project')}
@@ -407,9 +407,9 @@ const VFXSpecsForm = () => {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="company" className="space-y-6">
-            <CompanyInfo 
-              data={formData.companyInfo} 
+          <TabsContent value="letterhead" className="space-y-6">
+            <LetterheadInfo 
+              data={formData.letterheadInfo} 
               onChange={handleSectionChange}
             />
           </TabsContent>
