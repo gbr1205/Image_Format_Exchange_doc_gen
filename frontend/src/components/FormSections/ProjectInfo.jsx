@@ -12,7 +12,7 @@ const ProjectInfo = ({ data, onChange }) => {
     onChange('projectInfo', { ...data, [field]: value });
   };
 
-  const requiredFields = ['projectTitle', 'projectCodeName', 'projectFormat', 'client', 'director', 'dop', 'productionCompany', 'postProductionSupervisor', 'vfxSupervisor', 'vfxOnSetSupervisor', 'vfxVendor', 'vendorCodeName', 'projectFrameRate', 'colorScience'];
+  const requiredFields = ['documentVersion', 'projectTitle', 'projectCodeName', 'projectFormat', 'client', 'director', 'dop', 'productionCompany', 'postProductionSupervisor', 'vfxSupervisor', 'vfxOnSetSupervisor', 'vfxVendor', 'vendorCodeName', 'projectFrameRate', 'colorScience'];
 
   const isRequired = (field) => requiredFields.includes(field);
 
@@ -28,13 +28,14 @@ const ProjectInfo = ({ data, onChange }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <Label className="text-sm font-medium text-gray-700">
-              Document Version
+              Document Version <span className="text-red-500">*</span>
             </Label>
             <Input
               placeholder="v1.0"
-              value={data.documentVersion || 'v1.0'}
+              value={data.documentVersion || ''}
               onChange={(e) => handleChange('documentVersion', e.target.value)}
               className="transition-all duration-200 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              required
             />
           </div>
           
@@ -277,11 +278,12 @@ const ProjectInfo = ({ data, onChange }) => {
           <Label className="text-sm font-medium text-gray-700">
             VFX Documents Link
           </Label>
-          <Input
+          <Textarea
             placeholder="https://documents.link"
             value={data.vfxDocumentsLink || ''}
             onChange={(e) => handleChange('vfxDocumentsLink', e.target.value)}
-            className="transition-all duration-200 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            className="transition-all duration-200 focus:ring-2 focus:ring-green-500 focus:border-green-500 min-h-[60px]"
+            rows={2}
           />
         </div>
 
@@ -318,6 +320,20 @@ const ProjectInfo = ({ data, onChange }) => {
             </Select>
           </div>
         </div>
+
+        {data.colorScience === 'Custom' && (
+          <div className="space-y-2">
+            <Label className="text-sm font-medium text-gray-700">
+              Custom Color Science
+            </Label>
+            <Input
+              placeholder="Enter custom color science"
+              value={data.customColorScience || ''}
+              onChange={(e) => handleChange('customColorScience', e.target.value)}
+              className="transition-all duration-200 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            />
+          </div>
+        )}
 
         <div className="space-y-2">
           <Label className="text-sm font-medium text-gray-700">
