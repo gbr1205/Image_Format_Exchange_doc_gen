@@ -1,9 +1,13 @@
+import sys
+import os
+# Add the backend directory to the Python path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from fastapi import FastAPI, APIRouter, HTTPException, File, UploadFile, Response
 from fastapi.responses import StreamingResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
-import os
 import logging
 from pathlib import Path
 from typing import List, Optional
