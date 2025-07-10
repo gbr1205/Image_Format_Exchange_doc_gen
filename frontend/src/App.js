@@ -118,7 +118,9 @@ const VFXSpecsForm = () => {
 
   const calculateProgress = () => {
     const requiredFields = [
-      'companyInfo.companyName',
+      'letterheadInfo.userCompanyName',
+      'letterheadInfo.email',
+      'projectInfo.documentVersion',
       'projectInfo.projectTitle',
       'projectInfo.projectCodeName',
       'projectInfo.client',
