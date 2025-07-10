@@ -76,7 +76,7 @@ const VFXSpecsForm = () => {
   });
 
   const [templates, setTemplates] = useState([]);
-  const [activeTab, setActiveTab] = useState('company');
+  const [activeTab, setActiveTab] = useState('letterhead');
   const [completionProgress, setCompletionProgress] = useState(0);
   const [currentSpecId, setCurrentSpecId] = useState(null);
   const [loading, setLoading] = useState(false);
