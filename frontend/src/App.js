@@ -35,7 +35,7 @@ import './App.css';
 const VFXSpecsForm = () => {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
-    companyInfo: {},
+    letterheadInfo: {},
     projectInfo: {},
     cameraFormats: [{ 
       id: 1, 
@@ -52,7 +52,7 @@ const VFXSpecsForm = () => {
       showId: '', 
       episode: '', 
       shotId: '', 
-      plate: 'PL01', 
+      plate: 'PL', 
       identifier: '01', 
       version: 'v001' 
     },
