@@ -271,7 +271,7 @@ const VFXSpecsForm = () => {
 
   const getTabStatus = (tab) => {
     const checks = {
-      company: formData.companyInfo?.companyName,
+      letterhead: formData.letterheadInfo?.userCompanyName && formData.letterheadInfo?.email,
       project: formData.projectInfo?.projectTitle && formData.projectInfo?.client,
       camera: formData.cameraFormats?.length > 0,
       vfx: formData.vfxPulls?.showId && formData.vfxPulls?.shotId,
