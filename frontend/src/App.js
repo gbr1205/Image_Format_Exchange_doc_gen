@@ -279,75 +279,31 @@ const VFXSpecsForm = () => {
           </TabsContent>
 
           <TabsContent value="camera" className="space-y-6">
-            <Card className="shadow-sm border-l-4 border-l-purple-500">
-              <CardHeader className="bg-gradient-to-r from-purple-50 to-transparent">
-                <CardTitle className="text-xl text-gray-800 flex items-center gap-2">
-                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                  Camera Formats
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="text-center py-12 text-gray-500">
-                  <Camera className="h-16 w-16 mx-auto mb-4 text-gray-300" />
-                  <p className="text-lg font-medium mb-2">Camera Formats Section</p>
-                  <p>Dynamic camera format configuration will be available here</p>
-                </div>
-              </CardContent>
-            </Card>
+            <CameraFormats 
+              data={formData.cameraFormats} 
+              onChange={handleSectionChange}
+            />
           </TabsContent>
 
           <TabsContent value="vfx" className="space-y-6">
-            <Card className="shadow-sm border-l-4 border-l-orange-500">
-              <CardHeader className="bg-gradient-to-r from-orange-50 to-transparent">
-                <CardTitle className="text-xl text-gray-800 flex items-center gap-2">
-                  <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                  VFX Pulls
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="text-center py-12 text-gray-500">
-                  <Layers className="h-16 w-16 mx-auto mb-4 text-gray-300" />
-                  <p className="text-lg font-medium mb-2">VFX Pulls Configuration</p>
-                  <p>Technical specifications and naming conventions for VFX pulls</p>
-                </div>
-              </CardContent>
-            </Card>
+            <VFXPulls 
+              data={formData.vfxPulls} 
+              onChange={handleSectionChange}
+            />
           </TabsContent>
 
           <TabsContent value="media" className="space-y-6">
-            <Card className="shadow-sm border-l-4 border-l-pink-500">
-              <CardHeader className="bg-gradient-to-r from-pink-50 to-transparent">
-                <CardTitle className="text-xl text-gray-800 flex items-center gap-2">
-                  <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
-                  Media Review
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="text-center py-12 text-gray-500">
-                  <Monitor className="h-16 w-16 mx-auto mb-4 text-gray-300" />
-                  <p className="text-lg font-medium mb-2">Media Review Settings</p>
-                  <p>Review format specifications and delivery requirements</p>
-                </div>
-              </CardContent>
-            </Card>
+            <MediaReview 
+              data={formData.mediaReview} 
+              onChange={handleSectionChange}
+            />
           </TabsContent>
 
           <TabsContent value="delivery" className="space-y-6">
-            <Card className="shadow-sm border-l-4 border-l-cyan-500">
-              <CardHeader className="bg-gradient-to-r from-cyan-50 to-transparent">
-                <CardTitle className="text-xl text-gray-800 flex items-center gap-2">
-                  <div className="w-2 h-2 bg-cyan-500 rounded-full"></div>
-                  VFX Deliveries
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="text-center py-12 text-gray-500">
-                  <FileText className="h-16 w-16 mx-auto mb-4 text-gray-300" />
-                  <p className="text-lg font-medium mb-2">VFX Deliveries Naming</p>
-                  <p>Final delivery naming conventions and specifications</p>
-                </div>
-              </CardContent>
-            </Card>
+            <VFXDeliveries 
+              data={formData.vfxDeliveries} 
+              onChange={handleSectionChange}
+            />
           </TabsContent>
         </Tabs>
       </div>
