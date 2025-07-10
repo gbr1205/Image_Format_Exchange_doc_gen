@@ -8,12 +8,12 @@ class Logo(BaseModel):
     width: int
     height: int
 
-class CompanyInfo(BaseModel):
-    companyName: Optional[str] = None
-    companyEmail: Optional[str] = None
-    companyAddress: Optional[str] = None
-    companyWebsite: Optional[str] = None
-    companyLogo: Optional[Logo] = None
+class LetterheadInfo(BaseModel):
+    userCompanyName: Optional[str] = None
+    email: Optional[str] = None
+    address: Optional[str] = None
+    website: Optional[str] = None
+    logo: Optional[Logo] = None
 
 class ProjectInfo(BaseModel):
     documentVersion: Optional[str] = "v1.0"
@@ -91,7 +91,7 @@ class VFXDeliveries(BaseModel):
 class VFXSpec(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: Optional[str] = None
-    companyInfo: CompanyInfo = Field(default_factory=CompanyInfo)
+    letterheadInfo: LetterheadInfo = Field(default_factory=LetterheadInfo)
     projectInfo: ProjectInfo = Field(default_factory=ProjectInfo)
     cameraFormats: List[CameraFormat] = Field(default_factory=list)
     vfxPulls: VFXPulls = Field(default_factory=VFXPulls)
@@ -102,7 +102,7 @@ class VFXSpec(BaseModel):
 
 class VFXSpecCreate(BaseModel):
     name: Optional[str] = None
-    companyInfo: Optional[CompanyInfo] = None
+    letterheadInfo: Optional[LetterheadInfo] = None
     projectInfo: Optional[ProjectInfo] = None
     cameraFormats: Optional[List[CameraFormat]] = None
     vfxPulls: Optional[VFXPulls] = None
@@ -111,7 +111,7 @@ class VFXSpecCreate(BaseModel):
 
 class VFXSpecUpdate(BaseModel):
     name: Optional[str] = None
-    companyInfo: Optional[CompanyInfo] = None
+    letterheadInfo: Optional[LetterheadInfo] = None
     projectInfo: Optional[ProjectInfo] = None
     cameraFormats: Optional[List[CameraFormat]] = None
     vfxPulls: Optional[VFXPulls] = None
