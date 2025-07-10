@@ -4,9 +4,9 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import LogoUpload from '../LogoUpload';
 
-const CompanyInfo = ({ data, onChange }) => {
+const LetterheadInfo = ({ data, onChange }) => {
   const handleChange = (field, value) => {
-    onChange('companyInfo', { ...data, [field]: value });
+    onChange('letterheadInfo', { ...data, [field]: value });
   };
 
   return (
@@ -14,73 +14,75 @@ const CompanyInfo = ({ data, onChange }) => {
       <CardHeader className="bg-gradient-to-r from-blue-50 to-transparent">
         <CardTitle className="text-xl text-gray-800 flex items-center gap-2">
           <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-          Company Information
+          Letterhead Information
         </CardTitle>
       </CardHeader>
       <CardContent className="p-6 space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <Label htmlFor="companyName" className="text-sm font-medium text-gray-700">
-              Company Name
+            <Label htmlFor="userCompanyName" className="text-sm font-medium text-gray-700">
+              User/Company Name <span className="text-red-500">*</span>
             </Label>
             <Input
-              id="companyName"
+              id="userCompanyName"
               placeholder="Your Company Name"
-              value={data.companyName || ''}
-              onChange={(e) => handleChange('companyName', e.target.value)}
+              value={data.userCompanyName || ''}
+              onChange={(e) => handleChange('userCompanyName', e.target.value)}
               className="transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              required
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="companyEmail" className="text-sm font-medium text-gray-700">
-              Company Email
+            <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+              Email <span className="text-red-500">*</span>
             </Label>
             <Input
-              id="companyEmail"
+              id="email"
               type="email"
               placeholder="company@example.com"
-              value={data.companyEmail || ''}
-              onChange={(e) => handleChange('companyEmail', e.target.value)}
+              value={data.email || ''}
+              onChange={(e) => handleChange('email', e.target.value)}
               className="transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              required
             />
           </div>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="companyAddress" className="text-sm font-medium text-gray-700">
-            Company Address
+          <Label htmlFor="address" className="text-sm font-medium text-gray-700">
+            Address
           </Label>
           <Input
-            id="companyAddress"
+            id="address"
             placeholder="123 Main St, City, State"
-            value={data.companyAddress || ''}
-            onChange={(e) => handleChange('companyAddress', e.target.value)}
+            value={data.address || ''}
+            onChange={(e) => handleChange('address', e.target.value)}
             className="transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="companyWebsite" className="text-sm font-medium text-gray-700">
-            Company Website
+          <Label htmlFor="website" className="text-sm font-medium text-gray-700">
+            Website
           </Label>
           <Input
-            id="companyWebsite"
+            id="website"
             placeholder="https://company.com"
-            value={data.companyWebsite || ''}
-            onChange={(e) => handleChange('companyWebsite', e.target.value)}
+            value={data.website || ''}
+            onChange={(e) => handleChange('website', e.target.value)}
             className="transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
         <LogoUpload
-          label="Company Logo"
-          value={data.companyLogo}
-          onChange={(value) => handleChange('companyLogo', value)}
+          label="Logo"
+          value={data.logo}
+          onChange={(value) => handleChange('logo', value)}
         />
       </CardContent>
     </Card>
   );
 };
 
-export default CompanyInfo;
+export default LetterheadInfo;
