@@ -22,7 +22,7 @@ import {
   Sparkles
 } from 'lucide-react';
 
-import CompanyInfo from './components/FormSections/CompanyInfo';
+import LetterheadInfo from './components/FormSections/CompanyInfo';
 import ProjectInfo from './components/FormSections/ProjectInfo';
 import CameraFormats from './components/FormSections/CameraFormats';
 import VFXPulls from './components/FormSections/VFXPulls';
