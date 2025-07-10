@@ -258,7 +258,7 @@ const VFXSpecsForm = () => {
 
   const getTabIcon = (tab) => {
     const icons = {
-      company: Building2,
+      letterhead: Building2,
       project: Film,
       camera: Camera,
       vfx: Layers,
