@@ -408,36 +408,78 @@ const VFXSpecsForm = () => {
 
         {/* Main Form */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6 bg-white border shadow-sm">
-            <TabsTrigger value="letterhead" className="flex items-center gap-2 data-[state=active]:bg-blue-50">
+          <TabsList className="grid w-full grid-cols-6 border shadow-sm" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border)' }}>
+            <TabsTrigger 
+              value="letterhead" 
+              className="flex items-center gap-2" 
+              style={{ color: 'var(--text-primary)' }}
+              data-state={activeTab === 'letterhead' ? 'active' : 'inactive'}
+            >
               {getTabIcon('letterhead')}
               <span className="hidden sm:inline">Letterhead</span>
-              <Badge variant={getTabStatus('letterhead') === 'complete' ? 'default' : 'secondary'} className="ml-1 h-2 w-2 p-0 rounded-full" />
+              <Badge variant={getTabStatus('letterhead') === 'complete' ? 'default' : 'secondary'} className="ml-1 h-2 w-2 p-0 rounded-full" style={{
+                backgroundColor: getTabStatus('letterhead') === 'complete' ? 'var(--success)' : 'var(--text-secondary)'
+              }} />
             </TabsTrigger>
-            <TabsTrigger value="project" className="flex items-center gap-2 data-[state=active]:bg-green-50">
+            <TabsTrigger 
+              value="project" 
+              className="flex items-center gap-2"
+              style={{ color: 'var(--text-primary)' }}
+              data-state={activeTab === 'project' ? 'active' : 'inactive'}
+            >
               {getTabIcon('project')}
               <span className="hidden sm:inline">Project</span>
-              <Badge variant={getTabStatus('project') === 'complete' ? 'default' : 'secondary'} className="ml-1 h-2 w-2 p-0 rounded-full" />
+              <Badge variant={getTabStatus('project') === 'complete' ? 'default' : 'secondary'} className="ml-1 h-2 w-2 p-0 rounded-full" style={{
+                backgroundColor: getTabStatus('project') === 'complete' ? 'var(--success)' : 'var(--text-secondary)'
+              }} />
             </TabsTrigger>
-            <TabsTrigger value="camera" className="flex items-center gap-2 data-[state=active]:bg-purple-50">
+            <TabsTrigger 
+              value="camera" 
+              className="flex items-center gap-2"
+              style={{ color: 'var(--text-primary)' }}
+              data-state={activeTab === 'camera' ? 'active' : 'inactive'}
+            >
               {getTabIcon('camera')}
               <span className="hidden sm:inline">Camera</span>
-              <Badge variant={getTabStatus('camera') === 'complete' ? 'default' : 'secondary'} className="ml-1 h-2 w-2 p-0 rounded-full" />
+              <Badge variant={getTabStatus('camera') === 'complete' ? 'default' : 'secondary'} className="ml-1 h-2 w-2 p-0 rounded-full" style={{
+                backgroundColor: getTabStatus('camera') === 'complete' ? 'var(--success)' : 'var(--text-secondary)'
+              }} />
             </TabsTrigger>
-            <TabsTrigger value="vfx" className="flex items-center gap-2 data-[state=active]:bg-orange-50">
+            <TabsTrigger 
+              value="vfx" 
+              className="flex items-center gap-2"
+              style={{ color: 'var(--text-primary)' }}
+              data-state={activeTab === 'vfx' ? 'active' : 'inactive'}
+            >
               {getTabIcon('vfx')}
               <span className="hidden sm:inline">VFX</span>
-              <Badge variant={getTabStatus('vfx') === 'complete' ? 'default' : 'secondary'} className="ml-1 h-2 w-2 p-0 rounded-full" />
+              <Badge variant={getTabStatus('vfx') === 'complete' ? 'default' : 'secondary'} className="ml-1 h-2 w-2 p-0 rounded-full" style={{
+                backgroundColor: getTabStatus('vfx') === 'complete' ? 'var(--success)' : 'var(--text-secondary)'
+              }} />
             </TabsTrigger>
-            <TabsTrigger value="media" className="flex items-center gap-2 data-[state=active]:bg-pink-50">
+            <TabsTrigger 
+              value="media" 
+              className="flex items-center gap-2"
+              style={{ color: 'var(--text-primary)' }}
+              data-state={activeTab === 'media' ? 'active' : 'inactive'}
+            >
               {getTabIcon('media')}
               <span className="hidden sm:inline">Media</span>
-              <Badge variant={getTabStatus('media') === 'complete' ? 'default' : 'secondary'} className="ml-1 h-2 w-2 p-0 rounded-full" />
+              <Badge variant={getTabStatus('media') === 'complete' ? 'default' : 'secondary'} className="ml-1 h-2 w-2 p-0 rounded-full" style={{
+                backgroundColor: getTabStatus('media') === 'complete' ? 'var(--success)' : 'var(--text-secondary)'
+              }} />
             </TabsTrigger>
-            <TabsTrigger value="delivery" className="flex items-center gap-2 data-[state=active]:bg-cyan-50">
+            <TabsTrigger 
+              value="delivery" 
+              className="flex items-center gap-2"
+              style={{ color: 'var(--text-primary)' }}
+              data-state={activeTab === 'delivery' ? 'active' : 'inactive'}
+            >
               {getTabIcon('delivery')}
               <span className="hidden sm:inline">Delivery</span>
-              <Badge variant={getTabStatus('delivery') === 'complete' ? 'default' : 'secondary'} className="ml-1 h-2 w-2 p-0 rounded-full" />
+              <Badge variant={getTabStatus('delivery') === 'complete' ? 'default' : 'secondary'} className="ml-1 h-2 w-2 p-0 rounded-full" style={{
+                backgroundColor: getTabStatus('delivery') === 'complete' ? 'var(--success)' : 'var(--text-secondary)'
+              }} />
             </TabsTrigger>
           </TabsList>
 
