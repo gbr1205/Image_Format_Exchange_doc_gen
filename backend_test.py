@@ -14,7 +14,7 @@ import sys
 from typing import Dict, Any, Optional
 
 # Configuration
-BASE_URL = "https://cf2da9e7-02c0-4626-bfdb-c60a249b797d.preview.emergentagent.com/api"
+BASE_URL = "https://42e63cd8-3b06-42e9-9562-2fa17d3779bd.preview.emergentagent.com/api"
 TIMEOUT = 30
 
 class VFXAPITester:
