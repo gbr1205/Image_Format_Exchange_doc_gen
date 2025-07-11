@@ -301,10 +301,14 @@ const VFXSpecsForm = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <Progress value={completionProgress} className="w-32" />
-                <span className="text-sm font-medium text-gray-600">{completionProgress}%</span>
+                <Progress value={completionProgress} className="w-32" style={{ backgroundColor: 'var(--background-secondary)' }} />
+                <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>{completionProgress}%</span>
               </div>
-              <Badge variant={completionProgress === 100 ? 'default' : 'secondary'}>
+              <Badge variant={completionProgress === 100 ? 'default' : 'secondary'} style={{ 
+                backgroundColor: completionProgress === 100 ? 'var(--success)' : 'var(--background-secondary)',
+                color: 'var(--text-primary)',
+                borderColor: 'var(--border)'
+              }}>
                 {completionProgress === 100 ? 'Complete' : 'In Progress'}
               </Badge>
             </div>
@@ -314,6 +318,12 @@ const VFXSpecsForm = () => {
                 variant="outline" 
                 onClick={handleSaveSpec}
                 disabled={loading}
+                style={{ 
+                  backgroundColor: 'var(--accent-primary)',
+                  color: 'var(--text-primary)',
+                  borderColor: 'var(--border)'
+                }}
+                className="hover:opacity-80"
               >
                 <Save className="h-4 w-4 mr-2" />
                 {currentSpecId ? 'Update' : 'Save'} Spec
@@ -322,6 +332,12 @@ const VFXSpecsForm = () => {
                 variant="outline" 
                 onClick={handleSaveTemplate}
                 disabled={loading}
+                style={{ 
+                  backgroundColor: 'var(--accent-primary)',
+                  color: 'var(--text-primary)',
+                  borderColor: 'var(--border)'
+                }}
+                className="hover:opacity-80"
               >
                 <Folder className="h-4 w-4 mr-2" />
                 Save Template
@@ -330,6 +346,12 @@ const VFXSpecsForm = () => {
                 variant="outline" 
                 onClick={() => handleExport('pdf')}
                 disabled={loading}
+                style={{ 
+                  backgroundColor: 'var(--accent-primary)',
+                  color: 'var(--text-primary)',
+                  borderColor: 'var(--border)'
+                }}
+                className="hover:opacity-80"
               >
                 <Download className="h-4 w-4 mr-2" />
                 Export PDF
@@ -338,6 +360,12 @@ const VFXSpecsForm = () => {
                 variant="outline" 
                 onClick={() => handleExport('docx')}
                 disabled={loading}
+                style={{ 
+                  backgroundColor: 'var(--accent-primary)',
+                  color: 'var(--text-primary)',
+                  borderColor: 'var(--border)'
+                }}
+                className="hover:opacity-80"
               >
                 <FileText className="h-4 w-4 mr-2" />
                 Export DOCX
