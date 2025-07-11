@@ -282,19 +282,19 @@ const VFXSpecsForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--background-main)', color: 'var(--text-primary)' }}>
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg">
-              <Sparkles className="h-6 w-6 text-white" />
+            <div className="p-2 rounded-lg" style={{ backgroundColor: 'var(--accent-primary)' }}>
+              <Sparkles className="h-6 w-6" style={{ color: 'var(--text-primary)' }} />
             </div>
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>
                 IMAGE FORMAT EXCHANGE SPECS
               </h1>
-              <p className="text-gray-600 mt-1">Technical Consistency Across Processes</p>
+              <p className="mt-1" style={{ color: 'var(--text-secondary)' }}>Technical Consistency Across Processes</p>
             </div>
           </div>
           
