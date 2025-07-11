@@ -376,9 +376,9 @@ const VFXSpecsForm = () => {
 
         {/* Templates */}
         {templates.length > 0 && (
-          <Card className="mb-6">
+          <Card className="mb-6" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border)' }}>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
                 <Folder className="h-5 w-5" />
                 Saved Templates
               </CardTitle>
@@ -391,6 +391,12 @@ const VFXSpecsForm = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => handleLoadTemplate(template.id)}
+                    style={{ 
+                      backgroundColor: 'var(--accent-primary)',
+                      color: 'var(--text-primary)',
+                      borderColor: 'var(--border)'
+                    }}
+                    className="hover:opacity-80"
                   >
                     {template.name}
                   </Button>
