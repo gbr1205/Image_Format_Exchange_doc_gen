@@ -209,35 +209,7 @@ const VFXSpecsForm = () => {
     }
   };
 
-  const handleSaveSpec = async () => {
-    try {
-      setLoading(true);
-      
-      if (currentSpecId) {
-        await vfxSpecsAPI.update(currentSpecId, formData);
-        toast({
-          title: 'Specification Updated',
-          description: 'VFX specification updated successfully!',
-        });
-      } else {
-        const newSpec = await vfxSpecsAPI.create(formData);
-        setCurrentSpecId(newSpec.id);
-        toast({
-          title: 'Specification Saved',
-          description: 'VFX specification saved successfully!',
-        });
-      }
-    } catch (error) {
-      console.error('Error saving specification:', error);
-      toast({
-        title: 'Save Error',
-        description: 'Failed to save specification. Please try again.',
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  const handleExport = async (format) => {
 
   const getTabStatus = (tab) => {
     const checks = {
