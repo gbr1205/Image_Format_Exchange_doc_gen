@@ -578,14 +578,27 @@ const ConsolidatedForm = ({ formData, onFormChange }) => {
               </Label>
               <Select value={formData.projectInfo?.colorScience || ''} onValueChange={(value) => handleSectionChange('projectInfo', 'colorScience', value)}>
                 <SelectTrigger className="transition-all duration-200" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border)', color: 'var(--text-primary)' }}>
-                  <SelectValue placeholder="ACEScg" />
+                  <SelectValue placeholder="ACES 1.3" />
                 </SelectTrigger>
                 <SelectContent>
-                  {dropdownOptions.colorSpace.map(science => (
+                  {dropdownOptions.colorScience.map(science => (
                     <SelectItem key={science} value={science}>{science}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+              {formData.projectInfo?.colorScience === 'Custom' && (
+                <Input
+                  placeholder="Enter custom color science"
+                  value={formData.projectInfo?.customColorScience || ''}
+                  onChange={(e) => handleSectionChange('projectInfo', 'customColorScience', e.target.value)}
+                  className="transition-all duration-200 mt-2"
+                  style={{ 
+                    backgroundColor: 'var(--background-secondary)', 
+                    borderColor: 'var(--border)', 
+                    color: 'var(--text-primary)' 
+                  }}
+                />
+              )}
             </div>
           </div>
         </CardContent>
