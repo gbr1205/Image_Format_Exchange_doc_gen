@@ -106,6 +106,7 @@ export const dropdownOptions = {
   sensorMode: ["Open Gate (4608 x 3164)", "UHD (3840 x 2160)", "2.39:1 (4448 x 1856)", "16:9 (3840 x 2160)", "4:3 (4096 x 3072)", "Full Frame (4096 x 3072)", "S35 (3424 x 2202)", "2K (2048 x 1080)"],
   lensSqueezeeFactor: ["1:1", "1.25:1", "1.33:1", "1.5:1", "1.65:1", "1.8:1", "2:1"],
   cameraColorSpace: ["ARRI - LogC4/AWG4", "ARRI - LogC3/AWG3", "RED - Log3G10/REDWideGamutRGB", "Sony - S-Log3/S-Gamut3.Cine", "Canon - C-Log3/Cinema Gamut", "Blackmagic - Film/Wide Gamut", "Rec. 709", "sRGB"],
+  colorSpace: ["ACES2065-1 (AP0)", "ACEScg", "ACEScct", "ACEScc", "sRGB", "Rec709", "Rec1886", "Rec2020"],
   vfxFileFormat: ["OpenEXR (.exr)", "TIFF (.tiff)", "PNG (.png)", "JPEG (.jpg)", "DPX (.dpx)", "Cineon (.cin)"],
   compression: ["ZIP", "ZIP1", "ZIP16", "PIZ", "RLE", "PXR24", "B44", "B44A", "DWAA", "DWAB", "None"],
   resolution: [
