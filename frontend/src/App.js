@@ -209,8 +209,6 @@ const VFXSpecsForm = () => {
     }
   };
 
-  const handleExport = async (format) => {
-
   const getTabStatus = (tab) => {
     const checks = {
       letterhead: formData.letterheadInfo?.userCompanyName && formData.letterheadInfo?.email,
