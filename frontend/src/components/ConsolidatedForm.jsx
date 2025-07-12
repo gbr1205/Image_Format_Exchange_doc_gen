@@ -1097,12 +1097,13 @@ const ConsolidatedForm = ({ formData, onFormChange }) => {
             
             <div className="p-4 rounded-lg border" style={{ backgroundColor: 'var(--background-main)', borderColor: 'var(--border)' }}>
               <div className="flex items-center justify-center mb-4">
-                <img 
-                  src="/images/VFX_Work.jpg" 
-                  alt="VFX Work Example" 
-                  className="max-w-full h-auto rounded border"
-                  style={{ maxHeight: '300px', borderColor: 'var(--border)' }}
-                />
+                <div className="w-full max-w-md h-48 bg-gray-700 rounded border flex items-center justify-center" style={{ borderColor: 'var(--border)' }}>
+                  <div className="text-center" style={{ color: 'var(--text-secondary)' }}>
+                    <Clapperboard className="h-8 w-8 mx-auto mb-2" />
+                    <p className="text-sm">VFX WORK Image</p>
+                    <p className="text-xs">(OCIO/Nuke settings example)</p>
+                  </div>
+                </div>
               </div>
               
               <div className="text-sm space-y-3" style={{ color: 'var(--text-secondary)' }}>
