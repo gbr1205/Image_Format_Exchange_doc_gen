@@ -205,7 +205,7 @@ const ConsolidatedForm = ({ formData, onFormChange }) => {
       </Card>
 
       {/* Project Information Section */}
-      <Card className="shadow-sm border-l-4" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border)', borderLeftColor: 'var(--success)' }}>
+      <Card className="shadow-sm border-l-4 section-project" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border)' }}>
         <CardHeader style={{ backgroundColor: 'var(--background-secondary)' }}>
           <CardTitle className="text-xl flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
             <Film className="h-5 w-5" />
