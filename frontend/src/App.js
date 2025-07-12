@@ -286,20 +286,6 @@ const VFXSpecsForm = () => {
             <div className="flex gap-2">
               <Button 
                 variant="outline" 
-                onClick={handleSaveSpec}
-                disabled={loading}
-                style={{ 
-                  backgroundColor: 'var(--accent-primary)',
-                  color: 'var(--text-primary)',
-                  borderColor: 'var(--border)'
-                }}
-                className="hover:opacity-80"
-              >
-                <Save className="h-4 w-4 mr-2" />
-                {currentSpecId ? 'Update' : 'Save'} Spec
-              </Button>
-              <Button 
-                variant="outline" 
                 onClick={handleSaveTemplate}
                 disabled={loading}
                 style={{ 
