@@ -111,7 +111,7 @@ const ConsolidatedForm = ({ formData, onFormChange }) => {
   return (
     <div className="space-y-8">
       {/* Letterhead Information Section */}
-      <Card className="shadow-sm border-l-4" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border)', borderLeftColor: 'var(--accent-primary)' }}>
+      <Card className="shadow-sm border-l-4 section-letterhead" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border)' }}>
         <CardHeader style={{ backgroundColor: 'var(--background-secondary)' }}>
           <CardTitle className="text-xl flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
             <Building2 className="h-5 w-5" />
