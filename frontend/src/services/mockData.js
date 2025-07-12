@@ -100,7 +100,10 @@ export const mockProjects = [
 export const dropdownOptions = {
   projectFormat: ["Feature Film", "Episodic", "Commercial", "Music Video", "Documentary", "Short Film"],
   frameRate: ["23.976fps", "24fps", "25fps", "29.97fps", "30fps", "50fps", "59.94fps", "60fps"],
-  colorScience: ["ACES 1.3", "ACES 1.2", "ACES 1.1", "ACES 1.0", "Rec. 709", "DCI-P3", "Adobe RGB", "Custom"],
+  colorScience: ["ACES 1.0", "ACES 1.1", "ACES 1.2", "ACES 1.3", "Custom"],
+  mediaResolution: ["4096 x 2304", "4096 x 2160", "4096 x 2048", "2048 x 1152", "2048 x 1080", "1920 x 1080", "1280 x 720"],
+  mediaAspectRatio: ["1.33:1", "1.37:1", "1.66:1", "1.78:1", "1.85:1", "2.20:1", "2.35:1", "2.39:1", "2.76:1", "4:3", "16:9"],
+  mediaFrameRate: ["23.976 fps", "24 fps", "25 fps", "29.97 fps", "30 fps", "50 fps", "59.94 fps", "60 fps"],
   sourceCamera: ["Arri Alexa 35", "Arri Alexa Mini", "Arri Alexa Mini LF", "Arri Alexa LF", "RED V-Raptor", "RED Komodo", "Sony FX9", "Sony FX6", "Canon C300 Mark III", "Canon C500 Mark II", "Blackmagic URSA Mini Pro 12K"],
   codec: ["Arri Raw (HDE)", "ProRes 4444 XQ", "ProRes 4444", "ProRes 422 HQ", "ProRes 422", "ProRes 422 LT", "ProRes 422 Proxy", "RED Raw", "BRAW", "XAVC-I", "DNxHR 444", "DNxHR HQX", "DNxHR HQ"],
   sensorMode: ["Open Gate (4608 x 3164)", "UHD (3840 x 2160)", "2.39:1 (4448 x 1856)", "16:9 (3840 x 2160)", "4:3 (4096 x 3072)", "Full Frame (4096 x 3072)", "S35 (3424 x 2202)", "2K (2048 x 1080)"],
