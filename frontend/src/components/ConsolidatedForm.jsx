@@ -1168,17 +1168,16 @@ const ConsolidatedForm = ({ formData, onFormChange }) => {
               <Label className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
                 Resolution <span style={{ color: 'var(--error)' }}>*</span>
               </Label>
-              <Input
-                placeholder="1920x1080"
-                value={formData.mediaReview?.resolution || ''}
-                onChange={(e) => handleSectionChange('mediaReview', 'resolution', e.target.value)}
-                className="transition-all duration-200"
-                style={{ 
-                  backgroundColor: 'var(--background-secondary)', 
-                  borderColor: 'var(--border)', 
-                  color: 'var(--text-primary)' 
-                }}
-              />
+              <Select value={formData.mediaReview?.resolution || ''} onValueChange={(value) => handleSectionChange('mediaReview', 'resolution', value)}>
+                <SelectTrigger className="transition-all duration-200" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border)', color: 'var(--text-primary)' }}>
+                  <SelectValue placeholder="1920 x 1080" />
+                </SelectTrigger>
+                <SelectContent>
+                  {dropdownOptions.mediaResolution.map(res => (
+                    <SelectItem key={res} value={res}>{res}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             
             <div className="space-y-2">
