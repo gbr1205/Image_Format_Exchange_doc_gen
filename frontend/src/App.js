@@ -242,19 +242,6 @@ const VFXSpecsForm = () => {
     }
   };
 
-  const getTabIcon = (tab) => {
-    const icons = {
-      letterhead: Building2,
-      project: Film,
-      camera: Camera,
-      vfx: Layers,
-      media: Monitor,
-      delivery: FileText
-    };
-    const Icon = icons[tab] || FileText;
-    return <Icon className="h-4 w-4" />;
-  };
-
   const getTabStatus = (tab) => {
     const checks = {
       letterhead: formData.letterheadInfo?.userCompanyName && formData.letterheadInfo?.email,
