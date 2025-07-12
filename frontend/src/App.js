@@ -136,11 +136,8 @@ const VFXSpecsForm = () => {
     setCompletionProgress(progress);
   };
 
-  const handleSectionChange = (section, data) => {
-    setFormData(prev => ({
-      ...prev,
-      [section]: data
-    }));
+  const handleSectionChange = (newFormData) => {
+    setFormData(newFormData);
   };
 
   const handleSaveTemplate = async () => {
