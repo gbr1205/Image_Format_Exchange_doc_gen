@@ -755,7 +755,7 @@ const ConsolidatedForm = ({ formData, onFormChange }) => {
       </Card>
 
       {/* VFX Pulls Section */}
-      <Card className="shadow-sm border-l-4" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border)', borderLeftColor: 'var(--warning)' }}>
+      <Card className="shadow-sm border-l-4 section-vfx" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border)' }}>
         <CardHeader style={{ backgroundColor: 'var(--background-secondary)' }}>
           <CardTitle className="text-xl flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
             <Layers className="h-5 w-5" />
