@@ -1170,7 +1170,7 @@ const ConsolidatedForm = ({ formData, onFormChange }) => {
               </Label>
               <Select value={formData.mediaReview?.resolution || ''} onValueChange={(value) => handleSectionChange('mediaReview', 'resolution', value)}>
                 <SelectTrigger className="transition-all duration-200" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border)', color: 'var(--text-primary)' }}>
-                  <SelectValue placeholder="1920 x 1080" />
+                  <SelectValue placeholder="4096 x 2160" />
                 </SelectTrigger>
                 <SelectContent>
                   {dropdownOptions.mediaResolution.map(res => (
