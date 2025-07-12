@@ -1184,17 +1184,16 @@ const ConsolidatedForm = ({ formData, onFormChange }) => {
               <Label className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
                 Aspect Ratio <span style={{ color: 'var(--error)' }}>*</span>
               </Label>
-              <Input
-                placeholder="2.20:1"
-                value={formData.mediaReview?.aspectRatio || ''}
-                onChange={(e) => handleSectionChange('mediaReview', 'aspectRatio', e.target.value)}
-                className="transition-all duration-200"
-                style={{ 
-                  backgroundColor: 'var(--background-secondary)', 
-                  borderColor: 'var(--border)', 
-                  color: 'var(--text-primary)' 
-                }}
-              />
+              <Select value={formData.mediaReview?.aspectRatio || ''} onValueChange={(value) => handleSectionChange('mediaReview', 'aspectRatio', value)}>
+                <SelectTrigger className="transition-all duration-200" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border)', color: 'var(--text-primary)' }}>
+                  <SelectValue placeholder="2.20:1" />
+                </SelectTrigger>
+                <SelectContent>
+                  {dropdownOptions.mediaAspectRatio.map(ratio => (
+                    <SelectItem key={ratio} value={ratio}>{ratio}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
