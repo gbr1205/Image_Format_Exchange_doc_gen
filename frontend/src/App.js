@@ -46,10 +46,10 @@ const VFXSpecsForm = () => {
     mediaReview: { 
       container: 'mov', 
       videoCodec: 'ProRes 422 HQ', 
-      resolution: '1920x1080', 
+      resolution: '', 
       aspectRatio: '2.20:1', 
       letterboxing: '1920x872', 
-      frameRate: '23.976', 
+      frameRate: '', 
       colorSpace: 'Rec709, CDL and Show LUT Baked in' 
     },
     vfxDeliveries: { 
