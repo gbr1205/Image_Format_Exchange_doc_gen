@@ -10,8 +10,6 @@ import {
   Save, 
   Download, 
   FileText, 
-  Settings, 
-  Eye, 
   Folder,
   Sparkles
 } from 'lucide-react';
