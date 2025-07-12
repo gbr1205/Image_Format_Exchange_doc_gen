@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 
 import ConsolidatedForm from './components/ConsolidatedForm';
-import { vfxSpecsAPI, templatesAPI, exportAPI, dropdownAPI } from './services/api';
+import { templatesAPI, exportAPI, dropdownAPI } from './services/api';
 
 import './App.css';
 
