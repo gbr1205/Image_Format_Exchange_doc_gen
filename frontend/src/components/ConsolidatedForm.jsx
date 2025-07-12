@@ -728,7 +728,7 @@ const ConsolidatedForm = ({ formData, onFormChange }) => {
                       <SelectValue placeholder="Select color space" />
                     </SelectTrigger>
                     <SelectContent>
-                      {dropdownOptions.colorSpace.map(space => (
+                      {dropdownOptions.cameraColorSpace.map(space => (
                         <SelectItem key={space} value={space}>{space}</SelectItem>
                       ))}
                     </SelectContent>
