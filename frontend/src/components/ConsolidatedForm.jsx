@@ -581,7 +581,7 @@ const ConsolidatedForm = ({ formData, onFormChange }) => {
                   <SelectValue placeholder="ACEScg" />
                 </SelectTrigger>
                 <SelectContent>
-                  {dropdownOptions.colorScience.map(science => (
+                  {dropdownOptions.colorSpace.map(science => (
                     <SelectItem key={science} value={science}>{science}</SelectItem>
                   ))}
                 </SelectContent>
