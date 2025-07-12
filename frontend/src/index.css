@@ -3,16 +3,24 @@
 @tailwind utilities;
 
 :root {
-  --background-main: rgb(30, 30, 30);
-  --background-secondary: rgb(40, 40, 40);
-  --text-primary: rgb(220, 220, 220);
-  --text-secondary: rgb(150, 150, 150);
-  --accent-primary: rgb(70, 70, 70);
-  --accent-hover: rgb(85, 85, 85);
-  --success: rgb(60, 60, 60);
-  --warning: rgb(80, 80, 80);
-  --error: rgb(65, 65, 65);
-  --border: rgb(50, 50, 50);
+  /* Dark macOS-inspired color palette */
+  --background-main: rgb(28, 28, 30);
+  --background-secondary: rgb(38, 38, 40);
+  --text-primary: rgb(245, 245, 247);
+  --text-secondary: rgb(174, 174, 178);
+  --accent-primary: rgb(58, 58, 60);
+  --accent-secondary: rgb(120, 120, 128);
+  --accent-hover: rgb(68, 68, 70);
+  --success: rgb(52, 199, 89);
+  --warning: rgb(255, 159, 10);
+  --error: rgb(255, 69, 58);
+  --info: rgb(90, 200, 250);
+  --border: rgb(54, 54, 56);
+  --shadow: rgba(0, 0, 0, 0.25);
+  
+  /* Enhanced focus states */
+  --focus-ring: rgba(90, 200, 250, 0.3);
+  --focus-border: rgb(90, 200, 250);
 
   /* Legacy variables for compatibility */
   --background: 222.2 84% 4.9%;
