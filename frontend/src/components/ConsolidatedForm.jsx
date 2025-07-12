@@ -1292,8 +1292,13 @@ const ConsolidatedForm = ({ formData, onFormChange }) => {
             </div>
             
             <div className="p-4 rounded-lg border" style={{ backgroundColor: 'var(--background-main)', borderColor: 'var(--border)' }}>
-              <div className="flex items-center justify-center h-32 rounded border-2 border-dashed mb-4" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border)' }}>
-                <p className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>Slate Example Image</p>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src="/images/SLATE.jpg" 
+                  alt="Slate Example" 
+                  className="max-w-full h-auto rounded border"
+                  style={{ maxHeight: '300px', borderColor: 'var(--border)' }}
+                />
               </div>
               
               <div className="text-sm space-y-2" style={{ color: 'var(--text-secondary)' }}>
