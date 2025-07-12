@@ -1221,7 +1221,7 @@ const ConsolidatedForm = ({ formData, onFormChange }) => {
               </Label>
               <Select value={formData.mediaReview?.frameRate || ''} onValueChange={(value) => handleSectionChange('mediaReview', 'frameRate', value)}>
                 <SelectTrigger className="transition-all duration-200" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border)', color: 'var(--text-primary)' }}>
-                  <SelectValue placeholder="23.976 fps" />
+                  <SelectValue placeholder="24 fps" />
                 </SelectTrigger>
                 <SelectContent>
                   {dropdownOptions.mediaFrameRate.map(rate => (
