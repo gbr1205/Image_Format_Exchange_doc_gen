@@ -592,7 +592,7 @@ const ConsolidatedForm = ({ formData, onFormChange }) => {
       </Card>
 
       {/* Camera Formats Section */}
-      <Card className="shadow-sm border-l-4" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border)', borderLeftColor: 'var(--warning)' }}>
+      <Card className="shadow-sm border-l-4 section-camera" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border)' }}>
         <CardHeader style={{ backgroundColor: 'var(--background-secondary)' }}>
           <CardTitle className="text-xl flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
             <Camera className="h-5 w-5" />
