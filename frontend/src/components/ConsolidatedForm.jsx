@@ -1321,12 +1321,13 @@ const ConsolidatedForm = ({ formData, onFormChange }) => {
             
             <div className="p-4 rounded-lg border" style={{ backgroundColor: 'var(--background-main)', borderColor: 'var(--border)' }}>
               <div className="flex items-center justify-center mb-4">
-                <img 
-                  src="/images/OVERLAYS.jpg" 
-                  alt="Overlays Example" 
-                  className="max-w-full h-auto rounded border"
-                  style={{ maxHeight: '300px', borderColor: 'var(--border)' }}
-                />
+                <div className="w-full max-w-md h-48 bg-gray-700 rounded border flex items-center justify-center" style={{ borderColor: 'var(--border)' }}>
+                  <div className="text-center" style={{ color: 'var(--text-secondary)' }}>
+                    <Users className="h-8 w-8 mx-auto mb-2" />
+                    <p className="text-sm">OVERLAYS Image</p>
+                    <p className="text-xs">(Space/planets example)</p>
+                  </div>
+                </div>
               </div>
               
               <div className="text-sm space-y-2" style={{ color: 'var(--text-secondary)' }}>
