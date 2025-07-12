@@ -22,12 +22,7 @@ import {
   Sparkles
 } from 'lucide-react';
 
-import LetterheadInfo from './components/FormSections/CompanyInfo';
-import ProjectInfo from './components/FormSections/ProjectInfo';
-import CameraFormats from './components/FormSections/CameraFormats';
-import VFXPulls from './components/FormSections/VFXPulls';
-import MediaReview from './components/FormSections/MediaReview';
-import VFXDeliveries from './components/FormSections/VFXDeliveries';
+import ConsolidatedForm from './components/ConsolidatedForm';
 import { vfxSpecsAPI, templatesAPI, exportAPI, dropdownAPI } from './services/api';
 
 import './App.css';
