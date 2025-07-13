@@ -57,59 +57,89 @@ export const templatesAPI = {
 // Export API
 export const exportAPI = {
   toPDF: async (data) => {
-    const response = await axios.post(`${API}/export/pdf`, data, {
-      responseType: 'blob'
-    });
-    
-    // Create download link
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement('a');
-    link.href = url;
-    
-    // Get filename from headers or create default
-    const contentDisposition = response.headers['content-disposition'];
-    let filename = contentDisposition 
-      ? contentDisposition.split('filename=')[1].replace(/"/g, '')
-      : 'VFX_Specification.pdf';
-    
-    // Add project title and timestamp for unique naming
-    const projectTitle = data.projectInfo?.projectTitle || 'VFX_Spec';
-    const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
-    filename = `${projectTitle.replace(/[^a-zA-Z0-9]/g, '_')}_${timestamp}.pdf`;
-    
-    link.setAttribute('download', filename);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    window.URL.revokeObjectURL(url);
+    try {
+      console.log('Starting PDF export...');
+      const response = await axios.post(`${API}/export/pdf`, data, {
+        responseType: 'blob',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      
+      console.log('PDF response received:', response.status);
+      
+      // Create blob and download link
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      
+      // Generate filename
+      const projectTitle = data.projectInfo?.projectTitle || 'VFX_Spec';
+      const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
+      const filename = `${projectTitle.replace(/[^a-zA-Z0-9]/g, '_')}_${timestamp}.pdf`;
+      
+      link.setAttribute('download', filename);
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      
+      console.log('Triggering download:', filename);
+      link.click();
+      
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      console.log('PDF download completed');
+      return true;
+    } catch (error) {
+      console.error('PDF export error:', error);
+      throw error;
+    }
   },
   
   toDOCX: async (data) => {
-    const response = await axios.post(`${API}/export/docx`, data, {
-      responseType: 'blob'
-    });
-    
-    // Create download link
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement('a');
-    link.href = url;
-    
-    // Get filename from headers or create default
-    const contentDisposition = response.headers['content-disposition'];
-    let filename = contentDisposition 
-      ? contentDisposition.split('filename=')[1].replace(/"/g, '')
-      : 'VFX_Specification.docx';
-    
-    // Add project title and timestamp for unique naming
-    const projectTitle = data.projectInfo?.projectTitle || 'VFX_Spec';
-    const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
-    filename = `${projectTitle.replace(/[^a-zA-Z0-9]/g, '_')}_${timestamp}.docx`;
-    
-    link.setAttribute('download', filename);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    window.URL.revokeObjectURL(url);
+    try {
+      console.log('Starting DOCX export...');
+      const response = await axios.post(`${API}/export/docx`, data, {
+        responseType: 'blob',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      
+      console.log('DOCX response received:', response.status);
+      
+      // Create blob and download link
+      const blob = new Blob([response.data], { 
+        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+      });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      
+      // Generate filename
+      const projectTitle = data.projectInfo?.projectTitle || 'VFX_Spec';
+      const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
+      const filename = `${projectTitle.replace(/[^a-zA-Z0-9]/g, '_')}_${timestamp}.docx`;
+      
+      link.setAttribute('download', filename);
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      
+      console.log('Triggering download:', filename);
+      link.click();
+      
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      console.log('DOCX download completed');
+      return true;
+    } catch (error) {
+      console.error('DOCX export error:', error);
+      throw error;
+    }
   }
 };
 
