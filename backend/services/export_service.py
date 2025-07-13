@@ -284,25 +284,38 @@ class ExportService:
             logger.error(f"Error extracting logo from {logo_path}: {str(e)}")
         return None
 
-    def _create_styled_table(self, data, col_widths, bg_color=None):
-        """Create a styled table with enhanced formatting"""
+    def _create_styled_table(self, data, col_widths, bg_color=None, has_logos=False):
+        """Create a styled table with enhanced formatting and logo support"""
+        if not data:
+            return None
+            
         table = Table(data, colWidths=col_widths)
         
-        # Enhanced table styling
+        # Enhanced table styling with professional appearance
         table_style = [
             ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
             ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
             ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
-            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('FONTSIZE', (0, 0), (-1, -1), 11),
             ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-            ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
-            ('TOPPADDING', (0, 0), (-1, -1), 8),
-            ('LEFTPADDING', (0, 0), (-1, -1), 12),
-            ('RIGHTPADDING', (0, 0), (-1, -1), 12),
-            ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#e2e8f0')),
-            ('ROWBACKGROUNDS', (0, 0), (-1, -1), [colors.white, colors.HexColor('#f7fafc')])
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
+            ('TOPPADDING', (0, 0), (-1, -1), 12),
+            ('LEFTPADDING', (0, 0), (-1, -1), 15),
+            ('RIGHTPADDING', (0, 0), (-1, -1), 15),
+            ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#cbd5e0')),
+            ('ROWBACKGROUNDS', (0, 0), (-1, -1), [colors.white, colors.HexColor('#f8f9fa')]),
+            ('LINEBELOW', (0, 0), (-1, 0), 2, colors.HexColor('#3182ce')),  # Professional header line
         ]
         
+        # Add special styling for logo columns if present
+        if has_logos and len(col_widths) > 2:
+            table_style.extend([
+                ('ALIGN', (2, 0), (2, -1), 'CENTER'),
+                ('VALIGN', (2, 0), (2, -1), 'MIDDLE'),
+                ('FONTSIZE', (2, 0), (2, -1), 8),
+            ])
+        
+        # Apply background color to header if specified
         if bg_color:
             table_style.append(('BACKGROUND', (0, 0), (-1, 0), bg_color))
         
