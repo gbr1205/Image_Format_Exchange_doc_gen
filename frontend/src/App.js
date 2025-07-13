@@ -180,26 +180,32 @@ const VFXSpecsForm = () => {
   const handleExport = async (format) => {
     try {
       setLoading(true);
+      
+      console.log(`Starting ${format} export with data:`, formData);
+      
       toast({
         title: 'Export Started',
         description: `Generating ${format.toUpperCase()} export...`,
       });
       
+      let success = false;
       if (format === 'pdf') {
-        await exportAPI.toPDF(formData);
+        success = await exportAPI.toPDF(formData);
       } else if (format === 'docx') {
-        await exportAPI.toDOCX(formData);
+        success = await exportAPI.toDOCX(formData);
       }
       
-      toast({
-        title: 'Export Complete',
-        description: `${format.toUpperCase()} file downloaded successfully!`,
-      });
+      if (success) {
+        toast({
+          title: 'Export Complete',
+          description: `${format.toUpperCase()} file has been downloaded to your Downloads folder!`,
+        });
+      }
     } catch (error) {
       console.error('Error exporting:', error);
       toast({
         title: 'Export Error',
-        description: 'Failed to export document. Please try again.',
+        description: `Failed to export ${format.toUpperCase()}. Error: ${error.message}`,
         variant: 'destructive',
       });
     } finally {
