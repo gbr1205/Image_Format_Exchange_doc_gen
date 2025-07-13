@@ -7,8 +7,10 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, A4
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image, PageBreak
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image, PageBreak, KeepTogether
 from reportlab.lib.units import inch
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 from docx import Document
 from docx.shared import Inches, Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -21,41 +23,67 @@ class ExportService:
     def __init__(self):
         self.styles = getSampleStyleSheet()
         self.custom_styles = self._create_custom_styles()
+        self._register_fonts()
+
+    def _register_fonts(self):
+        """Register Roboto fonts if available, fallback to Helvetica"""
+        try:
+            # Try to register Roboto fonts (would need font files in production)
+            # For now, we'll use Helvetica as fallback
+            self.font_family = 'Helvetica'
+            self.font_bold = 'Helvetica-Bold'
+        except:
+            self.font_family = 'Helvetica'
+            self.font_bold = 'Helvetica-Bold'
 
     def _create_custom_styles(self):
-        """Create custom styles for PDF generation"""
+        """Create custom styles for PDF generation with enhanced styling"""
         custom_styles = {}
         
-        # Title style
+        # Enhanced title style
         custom_styles['title'] = ParagraphStyle(
             'CustomTitle',
             parent=self.styles['Heading1'],
-            fontSize=20,
+            fontSize=24,
             spaceAfter=30,
-            textColor=colors.darkblue,
-            alignment=1  # Center alignment
+            textColor=colors.HexColor('#1a365d'),  # Dark blue
+            alignment=1,  # Center alignment
+            fontName='Helvetica-Bold'
         )
         
-        # Section header style
+        # Subtitle style
+        custom_styles['subtitle'] = ParagraphStyle(
+            'CustomSubtitle',
+            parent=self.styles['Normal'],
+            fontSize=14,
+            spaceAfter=20,
+            textColor=colors.HexColor('#4a5568'),  # Medium gray
+            alignment=1,
+            fontName='Helvetica'
+        )
+        
+        # Section header style with cool colors
         custom_styles['section'] = ParagraphStyle(
             'CustomSection',
             parent=self.styles['Heading2'],
-            fontSize=14,
-            spaceBefore=20,
-            spaceAfter=10,
-            textColor=colors.darkblue,
-            leftIndent=0
+            fontSize=16,
+            spaceBefore=25,
+            spaceAfter=15,
+            textColor=colors.white,
+            leftIndent=10,
+            fontName='Helvetica-Bold'
         )
         
         # Subsection style
         custom_styles['subsection'] = ParagraphStyle(
             'CustomSubsection',
             parent=self.styles['Heading3'],
-            fontSize=12,
-            spaceBefore=15,
-            spaceAfter=8,
-            textColor=colors.black,
-            leftIndent=0
+            fontSize=14,
+            spaceBefore=20,
+            spaceAfter=12,
+            textColor=colors.HexColor('#2d3748'),
+            leftIndent=5,
+            fontName='Helvetica-Bold'
         )
         
         # Body text style
@@ -64,10 +92,31 @@ class ExportService:
             parent=self.styles['Normal'],
             fontSize=10,
             spaceAfter=6,
-            leftIndent=20
+            leftIndent=20,
+            fontName='Helvetica'
         )
         
         return custom_styles
+
+    def _create_section_header(self, title, bg_color):
+        """Create a styled section header with background color"""
+        header_style = ParagraphStyle(
+            'SectionHeader',
+            fontSize=16,
+            spaceBefore=25,
+            spaceAfter=15,
+            textColor=colors.white,
+            leftIndent=10,
+            fontName='Helvetica-Bold',
+            backColor=bg_color,
+            borderPadding=10
+        )
+        return Paragraph(title, header_style)
+
+    def _create_divider_line(self):
+        """Create a horizontal divider line"""
+        from reportlab.platypus import HRFlowable
+        return HRFlowable(width="100%", thickness=2, color=colors.HexColor('#e2e8f0'))
 
     def _should_include_field(self, value: Any) -> bool:
         """Check if field should be included (not empty)"""
@@ -97,72 +146,100 @@ class ExportService:
             logger.error(f"Error processing logo: {str(e)}")
         return None
 
+    def _create_styled_table(self, data, col_widths, bg_color=None):
+        """Create a styled table with enhanced formatting"""
+        table = Table(data, colWidths=col_widths)
+        
+        # Enhanced table styling
+        table_style = [
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+            ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+            ('TOPPADDING', (0, 0), (-1, -1), 8),
+            ('LEFTPADDING', (0, 0), (-1, -1), 12),
+            ('RIGHTPADDING', (0, 0), (-1, -1), 12),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#e2e8f0')),
+            ('ROWBACKGROUNDS', (0, 0), (-1, -1), [colors.white, colors.HexColor('#f7fafc')])
+        ]
+        
+        if bg_color:
+            table_style.append(('BACKGROUND', (0, 0), (-1, 0), bg_color))
+        
+        table.setStyle(TableStyle(table_style))
+        return table
+
     async def export_to_pdf(self, data: Dict[str, Any]) -> bytes:
-        """Export VFX specification to professional PDF"""
+        """Export VFX specification to professional styled PDF"""
         try:
-            logger.info("Generating professional PDF export")
+            logger.info("Generating professional styled PDF export")
             
             buffer = io.BytesIO()
-            doc = SimpleDocTemplate(buffer, pagesize=A4, topMargin=0.75*inch, bottomMargin=0.75*inch)
+            doc = SimpleDocTemplate(
+                buffer, 
+                pagesize=A4, 
+                topMargin=0.75*inch, 
+                bottomMargin=0.75*inch,
+                leftMargin=0.75*inch,
+                rightMargin=0.75*inch
+            )
             story = []
             
-            # Title
+            # Header with logo and title
+            letterhead_info = data.get('letterheadInfo', {})
+            if letterhead_info.get('logo'):
+                logo_img = self._get_logo_image(letterhead_info['logo'])
+                if logo_img:
+                    story.append(logo_img)
+                    story.append(Spacer(1, 10))
+            
+            # Company info header
+            if letterhead_info.get('userCompanyName'):
+                company_style = ParagraphStyle(
+                    'CompanyHeader',
+                    fontSize=18,
+                    textColor=colors.HexColor('#2d3748'),
+                    fontName='Helvetica-Bold',
+                    alignment=1
+                )
+                story.append(Paragraph(letterhead_info['userCompanyName'], company_style))
+                if letterhead_info.get('email'):
+                    story.append(Paragraph(letterhead_info['email'], self.styles['Normal']))
+                story.append(Spacer(1, 20))
+            
+            # Main title with enhanced styling
             title = Paragraph("IMAGE FORMAT EXCHANGE SPECS", self.custom_styles['title'])
             story.append(title)
-            story.append(Spacer(1, 20))
             
             # Subtitle
-            subtitle = Paragraph("Technical Consistency Across Processes", self.styles['Normal'])
-            subtitle.alignment = 1  # Center
+            subtitle = Paragraph("Technical Consistency Across Processes", self.custom_styles['subtitle'])
             story.append(subtitle)
-            story.append(Spacer(1, 30))
+            story.append(Spacer(1, 20))
             
-            # Date
+            # Date with styling
             date_text = f"Generated: {datetime.now().strftime('%B %d, %Y at %H:%M')}"
-            date_para = Paragraph(date_text, self.styles['Normal'])
-            date_para.alignment = 1  # Center
-            story.append(date_para)
+            date_style = ParagraphStyle(
+                'DateStyle',
+                fontSize=10,
+                textColor=colors.HexColor('#718096'),
+                alignment=1,
+                fontName='Helvetica'
+            )
+            story.append(Paragraph(date_text, date_style))
+            
+            # Divider line after letterhead
+            story.append(Spacer(1, 20))
+            story.append(self._create_divider_line())
             story.append(Spacer(1, 30))
             
-            # Letterhead Information Section
-            letterhead_info = data.get('letterheadInfo', {})
-            if any(self._should_include_field(letterhead_info.get(field)) for field in letterhead_info):
-                story.append(Paragraph("LETTERHEAD INFORMATION", self.custom_styles['section']))
-                
-                # Add logo if present
-                if letterhead_info.get('logo'):
-                    logo_img = self._get_logo_image(letterhead_info['logo'])
-                    if logo_img:
-                        story.append(logo_img)
-                        story.append(Spacer(1, 10))
-                
-                letterhead_data = []
-                if self._should_include_field(letterhead_info.get('userCompanyName')):
-                    letterhead_data.append(['Company Name:', letterhead_info['userCompanyName']])
-                if self._should_include_field(letterhead_info.get('email')):
-                    letterhead_data.append(['Email:', letterhead_info['email']])
-                if self._should_include_field(letterhead_info.get('address')):
-                    letterhead_data.append(['Address:', letterhead_info['address']])
-                if self._should_include_field(letterhead_info.get('website')):
-                    letterhead_data.append(['Website:', letterhead_info['website']])
-                
-                if letterhead_data:
-                    table = Table(letterhead_data, colWidths=[2*inch, 4*inch])
-                    table.setStyle(TableStyle([
-                        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-                        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
-                        ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
-                        ('FONTSIZE', (0, 0), (-1, -1), 10),
-                        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-                        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
-                    ]))
-                    story.append(table)
-                    story.append(Spacer(1, 20))
-            
-            # Project Information Section
+            # PROJECT INFORMATION SECTION with cool blue background
             project_info = data.get('projectInfo', {})
             if any(self._should_include_field(project_info.get(field)) for field in project_info):
-                story.append(Paragraph("PROJECT INFORMATION", self.custom_styles['section']))
+                section_header = self._create_section_header("PROJECT INFORMATION", colors.HexColor('#3182ce'))
+                story.append(KeepTogether([section_header]))
+                story.append(Spacer(1, 10))
                 
                 project_data = []
                 fields_mapping = {
@@ -193,26 +270,29 @@ class ExportService:
                         project_data.append([label, str(project_info[field])])
                 
                 if project_data:
-                    table = Table(project_data, colWidths=[2.5*inch, 3.5*inch])
-                    table.setStyle(TableStyle([
-                        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-                        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
-                        ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
-                        ('FONTSIZE', (0, 0), (-1, -1), 10),
-                        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-                        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
-                    ]))
+                    table = self._create_styled_table(project_data, [2.5*inch, 3.5*inch])
                     story.append(table)
-                    story.append(Spacer(1, 20))
+                    story.append(Spacer(1, 25))
             
-            # Camera Formats Section
+            # CAMERA FORMATS SECTION with cool green background
             camera_formats = data.get('cameraFormats', [])
             if camera_formats:
-                story.append(Paragraph("CAMERA FORMATS", self.custom_styles['section']))
+                section_header = self._create_section_header("CAMERA FORMATS", colors.HexColor('#38a169'))
+                story.append(KeepTogether([section_header]))
+                story.append(Spacer(1, 10))
                 
                 for i, camera in enumerate(camera_formats, 1):
                     if any(self._should_include_field(camera.get(field)) for field in camera):
-                        story.append(Paragraph(f"Camera {i}: {camera.get('cameraId', 'Unknown')}", self.custom_styles['subsection']))
+                        # Camera subsection header
+                        subsection_style = ParagraphStyle(
+                            'CameraSubsection',
+                            fontSize=12,
+                            spaceBefore=15,
+                            spaceAfter=8,
+                            textColor=colors.HexColor('#2d3748'),
+                            fontName='Helvetica-Bold'
+                        )
+                        story.append(Paragraph(f"Camera {i}: {camera.get('cameraId', 'Unknown')}", subsection_style))
                         
                         camera_data = []
                         if self._should_include_field(camera.get('sourceCamera')):
@@ -227,22 +307,18 @@ class ExportService:
                             camera_data.append(['Color Space:', camera['colorSpace']])
                         
                         if camera_data:
-                            table = Table(camera_data, colWidths=[2*inch, 4*inch])
-                            table.setStyle(TableStyle([
-                                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-                                ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
-                                ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
-                                ('FONTSIZE', (0, 0), (-1, -1), 10),
-                                ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-                                ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
-                            ]))
+                            table = self._create_styled_table(camera_data, [2*inch, 4*inch])
                             story.append(table)
                             story.append(Spacer(1, 15))
+                
+                story.append(Spacer(1, 10))
             
-            # VFX Pulls Section
+            # VFX PULLS SECTION with cool purple background
             vfx_pulls = data.get('vfxPulls', {})
             if any(self._should_include_field(vfx_pulls.get(field)) for field in vfx_pulls):
-                story.append(Paragraph("VFX PULLS SPECIFICATIONS", self.custom_styles['section']))
+                section_header = self._create_section_header("VFX PULLS SPECIFICATIONS", colors.HexColor('#805ad5'))
+                story.append(KeepTogether([section_header]))
+                story.append(Spacer(1, 10))
                 
                 vfx_data = []
                 vfx_fields = {
@@ -269,22 +345,16 @@ class ExportService:
                         vfx_data.append([label, str(vfx_pulls[field])])
                 
                 if vfx_data:
-                    table = Table(vfx_data, colWidths=[2*inch, 4*inch])
-                    table.setStyle(TableStyle([
-                        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-                        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
-                        ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
-                        ('FONTSIZE', (0, 0), (-1, -1), 10),
-                        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-                        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
-                    ]))
+                    table = self._create_styled_table(vfx_data, [2*inch, 4*inch])
                     story.append(table)
-                    story.append(Spacer(1, 20))
+                    story.append(Spacer(1, 25))
             
-            # Media Review Section
+            # MEDIA REVIEW SECTION with cool teal background
             media_review = data.get('mediaReview', {})
             if any(self._should_include_field(media_review.get(field)) for field in media_review):
-                story.append(Paragraph("MEDIA REVIEW SPECIFICATIONS", self.custom_styles['section']))
+                section_header = self._create_section_header("MEDIA REVIEW SPECIFICATIONS", colors.HexColor('#319795'))
+                story.append(KeepTogether([section_header]))
+                story.append(Spacer(1, 10))
                 
                 media_data = []
                 media_fields = {
@@ -303,22 +373,16 @@ class ExportService:
                         media_data.append([label, str(media_review[field])])
                 
                 if media_data:
-                    table = Table(media_data, colWidths=[2*inch, 4*inch])
-                    table.setStyle(TableStyle([
-                        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-                        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
-                        ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
-                        ('FONTSIZE', (0, 0), (-1, -1), 10),
-                        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-                        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
-                    ]))
+                    table = self._create_styled_table(media_data, [2*inch, 4*inch])
                     story.append(table)
-                    story.append(Spacer(1, 20))
+                    story.append(Spacer(1, 25))
             
-            # VFX Deliveries Section
+            # VFX DELIVERIES SECTION with cool orange background
             vfx_deliveries = data.get('vfxDeliveries', {})
             if any(self._should_include_field(vfx_deliveries.get(field)) for field in vfx_deliveries):
-                story.append(Paragraph("VFX DELIVERIES SPECIFICATIONS", self.custom_styles['section']))
+                section_header = self._create_section_header("VFX DELIVERIES SPECIFICATIONS", colors.HexColor('#ed8936'))
+                story.append(KeepTogether([section_header]))
+                story.append(Spacer(1, 10))
                 
                 delivery_data = []
                 delivery_fields = {
@@ -337,17 +401,12 @@ class ExportService:
                         delivery_data.append([label, str(vfx_deliveries[field])])
                 
                 if delivery_data:
-                    table = Table(delivery_data, colWidths=[2*inch, 4*inch])
-                    table.setStyle(TableStyle([
-                        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-                        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
-                        ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
-                        ('FONTSIZE', (0, 0), (-1, -1), 10),
-                        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-                        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
-                    ]))
+                    table = self._create_styled_table(delivery_data, [2*inch, 4*inch])
                     story.append(table)
-                    story.append(Spacer(1, 20))
+                    story.append(Spacer(1, 25))
+            
+            # Footer divider
+            story.append(self._create_divider_line())
             
             # Build PDF
             doc.build(story)
