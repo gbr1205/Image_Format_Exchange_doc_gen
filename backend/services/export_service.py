@@ -323,9 +323,9 @@ class ExportService:
         return table
 
     async def export_to_pdf(self, data: Dict[str, Any]) -> bytes:
-        """Export VFX specification to professional styled PDF"""
+        """Export VFX specification to professional styled PDF with enhanced visual elements"""
         try:
-            logger.info("Generating professional styled PDF export")
+            logger.info("Generating enhanced professional styled PDF export")
             
             buffer = io.BytesIO()
             doc = SimpleDocTemplate(
@@ -338,92 +338,216 @@ class ExportService:
             )
             story = []
             
-            # Header with logo and title
+            # ENHANCED HEADER SECTION WITH PROFESSIONAL STYLING
             letterhead_info = data.get('letterheadInfo', {})
-            if letterhead_info.get('logo'):
-                logo_img = self._get_logo_image(letterhead_info['logo'])
+            
+            # Professional header with logo and company info
+            header_elements = []
+            
+            # Main logo placement (top center or left)
+            main_logo = self._get_logo_from_data(data, 'letterheadInfo.logo')
+            if main_logo:
+                logo_img = self._get_logo_image(main_logo, height=1.2*inch, width=2.4*inch)
                 if logo_img:
-                    story.append(logo_img)
-                    story.append(Spacer(1, 10))
+                    header_elements.append(logo_img)
+                    header_elements.append(Spacer(1, 15))
             
-            # Company info header
+            # Company information with enhanced styling
             if letterhead_info.get('userCompanyName'):
-                company_style = ParagraphStyle(
-                    'CompanyHeader',
-                    fontSize=18,
-                    textColor=colors.HexColor('#2d3748'),
-                    fontName='Helvetica-Bold',
-                    alignment=1
-                )
-                story.append(Paragraph(letterhead_info['userCompanyName'], company_style))
+                company_name = Paragraph(letterhead_info['userCompanyName'], self.custom_styles['company'])
+                header_elements.append(company_name)
+                
+                # Contact information
+                contact_info = []
                 if letterhead_info.get('email'):
-                    story.append(Paragraph(letterhead_info['email'], self.styles['Normal']))
-                story.append(Spacer(1, 20))
+                    contact_info.append(letterhead_info['email'])
+                if letterhead_info.get('website'):
+                    contact_info.append(letterhead_info['website'])
+                if letterhead_info.get('address'):
+                    contact_info.append(letterhead_info['address'])
+                
+                for info in contact_info:
+                    header_elements.append(Paragraph(info, self.custom_styles['contact']))
+                
+                header_elements.append(Spacer(1, 20))
             
-            # Main title with enhanced styling
+            # Add all header elements
+            for element in header_elements:
+                story.append(element)
+            
+            # ENHANCED TITLE SECTION WITH BORDERS
             title = Paragraph("IMAGE FORMAT EXCHANGE SPECS", self.custom_styles['title'])
             story.append(title)
             
-            # Subtitle
+            # Professional subtitle with enhanced styling
             subtitle = Paragraph("Technical Consistency Across Processes", self.custom_styles['subtitle'])
             story.append(subtitle)
-            story.append(Spacer(1, 20))
+            story.append(Spacer(1, 15))
             
-            # Date with styling
-            date_text = f"Generated: {datetime.now().strftime('%B %d, %Y at %H:%M')}"
-            date_style = ParagraphStyle(
-                'DateStyle',
-                fontSize=10,
-                textColor=colors.HexColor('#718096'),
-                alignment=1,
-                fontName='Helvetica'
-            )
-            story.append(Paragraph(date_text, date_style))
+            # Enhanced date with professional styling
+            date_text = f"Document Generated: {datetime.now().strftime('%B %d, %Y at %H:%M UTC')}"
+            story.append(Paragraph(date_text, self.custom_styles['date']))
             
-            # Divider line after letterhead
-            story.append(Spacer(1, 20))
-            story.append(self._create_divider_line())
+            # Professional divider with enhanced styling
+            story.append(Spacer(1, 25))
+            story.append(self._create_enhanced_divider_line(colors.HexColor('#3182ce'), 3))
             story.append(Spacer(1, 30))
             
-            # PROJECT INFORMATION SECTION with cool blue background
+            # PROJECT INFORMATION SECTION WITH LOGO INTEGRATION
             project_info = data.get('projectInfo', {})
             if any(self._should_include_field(project_info.get(field)) for field in project_info):
-                section_header = self._create_section_header("PROJECT INFORMATION", colors.HexColor('#3182ce'))
+                section_header = self._create_section_header("PROJECT INFORMATION", colors.HexColor('#2b6cb0'))
                 story.append(KeepTogether([section_header]))
-                story.append(Spacer(1, 10))
+                story.append(Spacer(1, 15))
                 
+                # Prepare project data with enhanced organization
                 project_data = []
-                fields_mapping = {
+                
+                # Basic project information
+                basic_fields = {
                     'documentVersion': 'Document Version:',
                     'projectDate': 'Project Date:',
                     'projectTitle': 'Project Title:',
                     'projectCodeName': 'Project Code Name:',
                     'projectFormat': 'Project Format:',
-                    'client': 'Client:',
-                    'director': 'Director:',
-                    'dop': 'Director of Photography:',
-                    'productionCompany': 'Production Company:',
-                    'postProductionSupervisor': 'Post-Production Supervisor:',
-                    'lab': 'Lab:',
-                    'colorist': 'Colorist:',
-                    'vfxSupervisor': 'VFX Supervisor:',
-                    'vfxOnSetSupervisor': 'VFX On-Set Supervisor:',
-                    'vfxVendor': 'VFX Vendor:',
-                    'vendorCodeName': 'Vendor Code Name:',
                     'projectFrameRate': 'Project Frame Rate:',
                     'colorScience': 'Color Science:',
-                    'customColorScience': 'Custom Color Science:',
-                    'vfxDocumentsLink': 'VFX Documents Link:'
+                    'customColorScience': 'Custom Color Science:'
                 }
                 
-                for field, label in fields_mapping.items():
+                for field, label in basic_fields.items():
                     if self._should_include_field(project_info.get(field)):
                         project_data.append([label, str(project_info[field])])
                 
                 if project_data:
                     table = self._create_styled_table(project_data, [2.5*inch, 3.5*inch])
                     story.append(table)
+                    story.append(Spacer(1, 20))
+                
+                # CLIENT SECTION WITH LOGO
+                client_data = []
+                if self._should_include_field(project_info.get('client')):
+                    client_data.append(['Client:', str(project_info['client'])])
+                
+                # Add client logo if available
+                client_logo = self._get_logo_from_data(data, 'projectInfo.clientLogo')
+                if client_logo and client_data:
+                    logo_img = self._get_logo_image(client_logo, height=0.8*inch, width=1.2*inch)
+                    if logo_img:
+                        client_data.append(['Client Logo:', '', logo_img])
+                        table = self._create_styled_table(client_data, [2*inch, 2.5*inch, 1.5*inch], has_logos=True)
+                    else:
+                        table = self._create_styled_table(client_data, [2.5*inch, 3.5*inch])
+                elif client_data:
+                    table = self._create_styled_table(client_data, [2.5*inch, 3.5*inch])
+                else:
+                    table = None
+                
+                if table:
+                    story.append(table)
+                    story.append(Spacer(1, 20))
+                
+                # PRODUCTION TEAM SECTION WITH LOGOS
+                production_data = []
+                production_fields = {
+                    'director': 'Director:',
+                    'dop': 'Director of Photography:',
+                    'productionCompany': 'Production Company:'
+                }
+                
+                for field, label in production_fields.items():
+                    if self._should_include_field(project_info.get(field)):
+                        production_data.append([label, str(project_info[field])])
+                
+                # Add production company logo if available
+                prod_logo = self._get_logo_from_data(data, 'projectInfo.productionCompanyLogo')
+                if prod_logo and production_data:
+                    logo_img = self._get_logo_image(prod_logo, height=0.8*inch, width=1.2*inch)
+                    if logo_img:
+                        production_data.append(['Production Company Logo:', '', logo_img])
+                        table = self._create_styled_table(production_data, [2*inch, 2.5*inch, 1.5*inch], has_logos=True)
+                    else:
+                        table = self._create_styled_table(production_data, [2.5*inch, 3.5*inch])
+                elif production_data:
+                    table = self._create_styled_table(production_data, [2.5*inch, 3.5*inch])
+                else:
+                    table = None
+                
+                if table:
+                    story.append(table)
+                    story.append(Spacer(1, 20))
+                
+                # POST-PRODUCTION SECTION WITH LOGOS
+                post_data = []
+                post_fields = {
+                    'postProductionSupervisor': 'Post-Production Supervisor:',
+                    'lab': 'Lab:',
+                    'colorist': 'Colorist:'
+                }
+                
+                for field, label in post_fields.items():
+                    if self._should_include_field(project_info.get(field)):
+                        post_data.append([label, str(project_info[field])])
+                
+                # Add lab logo if available
+                lab_logo = self._get_logo_from_data(data, 'projectInfo.labLogo')
+                if lab_logo and post_data:
+                    logo_img = self._get_logo_image(lab_logo, height=0.8*inch, width=1.2*inch)
+                    if logo_img:
+                        post_data.append(['Lab Logo:', '', logo_img])
+                        table = self._create_styled_table(post_data, [2*inch, 2.5*inch, 1.5*inch], has_logos=True)
+                    else:
+                        table = self._create_styled_table(post_data, [2.5*inch, 3.5*inch])
+                elif post_data:
+                    table = self._create_styled_table(post_data, [2.5*inch, 3.5*inch])
+                else:
+                    table = None
+                
+                if table:
+                    story.append(table)
+                    story.append(Spacer(1, 20))
+                
+                # VFX SECTION WITH VENDOR LOGO
+                vfx_data = []
+                vfx_fields = {
+                    'vfxSupervisor': 'VFX Supervisor:',
+                    'vfxOnSetSupervisor': 'VFX On-Set Supervisor:',
+                    'vfxVendor': 'VFX Vendor:',
+                    'vendorCodeName': 'Vendor Code Name:'
+                }
+                
+                for field, label in vfx_fields.items():
+                    if self._should_include_field(project_info.get(field)):
+                        vfx_data.append([label, str(project_info[field])])
+                
+                # Add VFX vendor logo if available
+                vfx_logo = self._get_logo_from_data(data, 'projectInfo.vfxVendorLogo')
+                if vfx_logo and vfx_data:
+                    logo_img = self._get_logo_image(vfx_logo, height=0.8*inch, width=1.2*inch)
+                    if logo_img:
+                        vfx_data.append(['VFX Vendor Logo:', '', logo_img])
+                        table = self._create_styled_table(vfx_data, [2*inch, 2.5*inch, 1.5*inch], has_logos=True)
+                    else:
+                        table = self._create_styled_table(vfx_data, [2.5*inch, 3.5*inch])
+                elif vfx_data:
+                    table = self._create_styled_table(vfx_data, [2.5*inch, 3.5*inch])
+                else:
+                    table = None
+                
+                if table:
+                    story.append(table)
+                    story.append(Spacer(1, 20))
+                
+                # Links section
+                if self._should_include_field(project_info.get('vfxDocumentsLink')):
+                    links_data = [['VFX Documents Link:', str(project_info['vfxDocumentsLink'])]]
+                    table = self._create_styled_table(links_data, [2.5*inch, 3.5*inch])
+                    story.append(table)
                     story.append(Spacer(1, 25))
+                
+                # Add decorative separator
+                story.append(self._create_decorative_border())
+                story.append(Spacer(1, 15))
             
             # CAMERA FORMATS SECTION with cool green background
             camera_formats = data.get('cameraFormats', [])
