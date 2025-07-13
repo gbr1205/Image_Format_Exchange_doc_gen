@@ -1,18 +1,19 @@
-import sys
 import os
+import sys
+from pathlib import Path
+from typing import List, Optional
+from datetime import datetime
+
 # Add the backend directory to the Python path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from fastapi import FastAPI, APIRouter, HTTPException, File, UploadFile, Response
+from fastapi import FastAPI, APIRouter, HTTPException, File, UploadFile
 from fastapi.responses import StreamingResponse
-from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
+from dotenv import load_dotenv
 import logging
-from pathlib import Path
-from typing import List, Optional
 import io
-from datetime import datetime
 import base64
 from PIL import Image
 
@@ -21,6 +22,7 @@ from models.vfx_spec import VFXSpec, VFXSpecCreate, VFXSpecUpdate, Template, Tem
 from services.vfx_spec_service import VFXSpecService
 from services.export_service import ExportService
 
+# Configuration
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
@@ -33,10 +35,14 @@ db = client[os.environ['DB_NAME']]
 vfx_spec_service = VFXSpecService(db)
 export_service = ExportService()
 
-# Create the main app without a prefix
-app = FastAPI(title="VFX Specs Exchange API", description="API for VFX specification management")
+# Create FastAPI app
+app = FastAPI(
+    title="VFX Specs Exchange API", 
+    description="Professional VFX specification management system",
+    version="1.0.0"
+)
 
-# Create a router with the /api prefix
+# API Router
 api_router = APIRouter(prefix="/api")
 
 # VFX Specifications endpoints
