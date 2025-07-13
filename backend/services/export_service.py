@@ -753,116 +753,268 @@ class ExportService:
             raise
 
     async def export_to_docx(self, data: Dict[str, Any]) -> bytes:
-        """Export VFX specification to professional DOCX"""
+        """Export VFX specification to professional DOCX with enhanced styling and logo integration"""
         try:
-            logger.info("Generating professional DOCX export")
+            logger.info("Generating enhanced professional DOCX export")
             
             doc = Document()
             
-            # Set document styles
+            # Enhanced document styles
             style = doc.styles['Normal']
             style.font.name = 'Calibri'
             style.font.size = Pt(11)
             
-            # Title
-            title = doc.add_heading('IMAGE FORMAT EXCHANGE SPECS', 0)
-            title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            # Add custom styles for professional appearance
+            heading_style = doc.styles['Heading 1']
+            heading_style.font.name = 'Calibri'
+            heading_style.font.size = Pt(16)
+            heading_style.font.color.rgb = RGBColor(26, 54, 93)  # Dark blue
             
-            # Subtitle
-            subtitle = doc.add_paragraph('Technical Consistency Across Processes')
-            subtitle.alignment = WD_ALIGN_PARAGRAPH.CENTER
-            
-            # Date
-            date_para = doc.add_paragraph(f"Generated: {datetime.now().strftime('%B %d, %Y at %H:%M')}")
-            date_para.alignment = WD_ALIGN_PARAGRAPH.CENTER
-            
-            doc.add_paragraph()  # Empty line
-            
-            # Letterhead Information Section
+            # ENHANCED HEADER SECTION
             letterhead_info = data.get('letterheadInfo', {})
-            if any(self._should_include_field(letterhead_info.get(field)) for field in letterhead_info):
-                doc.add_heading('Letterhead Information', level=1)
+            
+            # Company information with enhanced styling
+            if letterhead_info.get('userCompanyName'):
+                company_para = doc.add_paragraph()
+                company_run = company_para.add_run(letterhead_info['userCompanyName'])
+                company_run.font.name = 'Calibri'
+                company_run.font.size = Pt(20)
+                company_run.font.bold = True
+                company_run.font.color.rgb = RGBColor(26, 54, 93)
+                company_para.alignment = WD_ALIGN_PARAGRAPH.CENTER
                 
-                if self._should_include_field(letterhead_info.get('userCompanyName')):
-                    doc.add_paragraph(f"Company Name: {letterhead_info['userCompanyName']}")
-                if self._should_include_field(letterhead_info.get('email')):
-                    doc.add_paragraph(f"Email: {letterhead_info['email']}")
-                if self._should_include_field(letterhead_info.get('address')):
-                    doc.add_paragraph(f"Address: {letterhead_info['address']}")
-                if self._should_include_field(letterhead_info.get('website')):
-                    doc.add_paragraph(f"Website: {letterhead_info['website']}")
+                # Contact information
+                contact_info = []
+                if letterhead_info.get('email'):
+                    contact_info.append(letterhead_info['email'])
+                if letterhead_info.get('website'):
+                    contact_info.append(letterhead_info['website'])
+                if letterhead_info.get('address'):
+                    contact_info.append(letterhead_info['address'])
+                
+                for info in contact_info:
+                    contact_para = doc.add_paragraph(info)
+                    contact_para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                    contact_run = contact_para.runs[0]
+                    contact_run.font.size = Pt(11)
+                    contact_run.font.color.rgb = RGBColor(74, 85, 104)
                 
                 doc.add_paragraph()  # Empty line
             
-            # Project Information Section
+            # Main logo if available
+            main_logo = self._get_logo_from_data(data, 'letterheadInfo.logo')
+            if main_logo:
+                try:
+                    # Extract base64 data and convert to image
+                    base64_data = main_logo.split(',')[1]
+                    image_data = base64.b64decode(base64_data)
+                    image_buffer = io.BytesIO(image_data)
+                    
+                    # Add logo to document
+                    logo_para = doc.add_paragraph()
+                    logo_para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                    logo_run = logo_para.add_run()
+                    logo_run.add_picture(image_buffer, width=Inches(3))
+                    doc.add_paragraph()  # Empty line
+                except Exception as e:
+                    logger.warning(f"Could not add main logo to DOCX: {str(e)}")
+            
+            # ENHANCED TITLE SECTION
+            title = doc.add_heading('IMAGE FORMAT EXCHANGE SPECS', 0)
+            title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            title_run = title.runs[0]
+            title_run.font.color.rgb = RGBColor(26, 54, 93)
+            
+            # Professional subtitle
+            subtitle = doc.add_paragraph('Technical Consistency Across Processes')
+            subtitle.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            subtitle_run = subtitle.runs[0]
+            subtitle_run.font.italic = True
+            subtitle_run.font.color.rgb = RGBColor(74, 85, 104)
+            
+            # Enhanced date
+            date_para = doc.add_paragraph(f"Document Generated: {datetime.now().strftime('%B %d, %Y at %H:%M UTC')}")
+            date_para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            date_run = date_para.runs[0]
+            date_run.font.size = Pt(10)
+            date_run.font.color.rgb = RGBColor(113, 128, 150)
+            date_run.font.italic = True
+            
+            doc.add_paragraph()  # Empty line
+            
+            # Add horizontal line separator
+            separator_para = doc.add_paragraph()
+            separator_run = separator_para.add_run('_' * 80)
+            separator_run.font.color.rgb = RGBColor(49, 130, 206)
+            separator_para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            
+            doc.add_paragraph()  # Empty line
+            
+            # PROJECT INFORMATION SECTION WITH ENHANCED ORGANIZATION
             project_info = data.get('projectInfo', {})
             if any(self._should_include_field(project_info.get(field)) for field in project_info):
-                doc.add_heading('Project Information', level=1)
+                # Section header with enhanced styling
+                section_heading = doc.add_heading('PROJECT INFORMATION', level=1)
+                section_run = section_heading.runs[0]
+                section_run.font.color.rgb = RGBColor(43, 108, 176)
                 
-                fields_mapping = {
+                # Basic project information table
+                basic_fields = {
                     'documentVersion': 'Document Version',
                     'projectDate': 'Project Date',
                     'projectTitle': 'Project Title',
                     'projectCodeName': 'Project Code Name',
                     'projectFormat': 'Project Format',
-                    'client': 'Client',
+                    'projectFrameRate': 'Project Frame Rate',
+                    'colorScience': 'Color Science',
+                    'customColorScience': 'Custom Color Science'
+                }
+                
+                basic_data = []
+                for field, label in basic_fields.items():
+                    if self._should_include_field(project_info.get(field)):
+                        basic_data.append([label, str(project_info[field])])
+                
+                if basic_data:
+                    self._add_enhanced_docx_table(doc, basic_data, "Basic Information")
+                
+                # CLIENT SECTION WITH LOGO
+                client_data = []
+                if self._should_include_field(project_info.get('client')):
+                    client_data.append(['Client', str(project_info['client'])])
+                
+                if client_data:
+                    self._add_enhanced_docx_table(doc, client_data, "Client Information")
+                    
+                    # Add client logo if available
+                    client_logo = self._get_logo_from_data(data, 'projectInfo.clientLogo')
+                    if client_logo:
+                        self._add_logo_to_docx(doc, client_logo, "Client Logo")
+                
+                # PRODUCTION TEAM SECTION
+                production_data = []
+                production_fields = {
                     'director': 'Director',
                     'dop': 'Director of Photography',
-                    'productionCompany': 'Production Company',
+                    'productionCompany': 'Production Company'
+                }
+                
+                for field, label in production_fields.items():
+                    if self._should_include_field(project_info.get(field)):
+                        production_data.append([label, str(project_info[field])])
+                
+                if production_data:
+                    self._add_enhanced_docx_table(doc, production_data, "Production Team")
+                    
+                    # Add production company logo if available
+                    prod_logo = self._get_logo_from_data(data, 'projectInfo.productionCompanyLogo')
+                    if prod_logo:
+                        self._add_logo_to_docx(doc, prod_logo, "Production Company Logo")
+                
+                # POST-PRODUCTION SECTION
+                post_data = []
+                post_fields = {
                     'postProductionSupervisor': 'Post-Production Supervisor',
                     'lab': 'Lab',
-                    'colorist': 'Colorist',
+                    'colorist': 'Colorist'
+                }
+                
+                for field, label in post_fields.items():
+                    if self._should_include_field(project_info.get(field)):
+                        post_data.append([label, str(project_info[field])])
+                
+                if post_data:
+                    self._add_enhanced_docx_table(doc, post_data, "Post-Production")
+                    
+                    # Add lab logo if available
+                    lab_logo = self._get_logo_from_data(data, 'projectInfo.labLogo')
+                    if lab_logo:
+                        self._add_logo_to_docx(doc, lab_logo, "Lab Logo")
+                
+                # VFX SECTION
+                vfx_data = []
+                vfx_fields = {
                     'vfxSupervisor': 'VFX Supervisor',
                     'vfxOnSetSupervisor': 'VFX On-Set Supervisor',
                     'vfxVendor': 'VFX Vendor',
-                    'vendorCodeName': 'Vendor Code Name',
-                    'projectFrameRate': 'Project Frame Rate',
-                    'colorScience': 'Color Science',
-                    'customColorScience': 'Custom Color Science',
-                    'vfxDocumentsLink': 'VFX Documents Link'
+                    'vendorCodeName': 'Vendor Code Name'
                 }
                 
-                for field, label in fields_mapping.items():
+                for field, label in vfx_fields.items():
                     if self._should_include_field(project_info.get(field)):
-                        doc.add_paragraph(f"{label}: {project_info[field]}")
+                        vfx_data.append([label, str(project_info[field])])
                 
-                doc.add_paragraph()  # Empty line
+                if vfx_data:
+                    self._add_enhanced_docx_table(doc, vfx_data, "VFX Team")
+                    
+                    # Add VFX vendor logo if available
+                    vfx_logo = self._get_logo_from_data(data, 'projectInfo.vfxVendorLogo')
+                    if vfx_logo:
+                        self._add_logo_to_docx(doc, vfx_logo, "VFX Vendor Logo")
+                
+                # Links section
+                if self._should_include_field(project_info.get('vfxDocumentsLink')):
+                    links_data = [['VFX Documents Link', str(project_info['vfxDocumentsLink'])]]
+                    self._add_enhanced_docx_table(doc, links_data, "Reference Links")
             
-            # Camera Formats Section
+            # CAMERA FORMATS SECTION
             camera_formats = data.get('cameraFormats', [])
             if camera_formats:
-                doc.add_heading('Camera Formats', level=1)
+                section_heading = doc.add_heading('Camera Formats', level=1)
+                section_run = section_heading.runs[0]
+                section_run.font.color.rgb = RGBColor(56, 161, 105)
                 
                 for i, camera in enumerate(camera_formats, 1):
                     if any(self._should_include_field(camera.get(field)) for field in camera):
-                        doc.add_heading(f"Camera {i}: {camera.get('cameraId', 'Unknown')}", level=2)
+                        camera_heading = doc.add_heading(f"Camera Configuration {i}: {camera.get('cameraId', 'Unknown')}", level=2)
+                        camera_run = camera_heading.runs[0]
+                        camera_run.font.color.rgb = RGBColor(26, 54, 93)
                         
-                        if self._should_include_field(camera.get('sourceCamera')):
-                            doc.add_paragraph(f"Source Camera: {camera['sourceCamera']}")
-                        if self._should_include_field(camera.get('codec')):
-                            doc.add_paragraph(f"Codec: {camera['codec']}")
-                        if self._should_include_field(camera.get('sensorMode')):
-                            doc.add_paragraph(f"Sensor Mode: {camera['sensorMode']}")
-                        if self._should_include_field(camera.get('lensSqueezeeFactor')):
-                            doc.add_paragraph(f"Lens Squeeze Factor: {camera['lensSqueezeeFactor']}")
-                        if self._should_include_field(camera.get('colorSpace')):
-                            doc.add_paragraph(f"Color Space: {camera['colorSpace']}")
-                
-                doc.add_paragraph()  # Empty line
+                        camera_data = []
+                        camera_fields = {
+                            'sourceCamera': 'Source Camera',
+                            'codec': 'Codec',
+                            'sensorMode': 'Sensor Mode',
+                            'lensSqueezeeFactor': 'Lens Squeeze Factor',
+                            'colorSpace': 'Color Space/Transfer Function'
+                        }
+                        
+                        for field, label in camera_fields.items():
+                            if self._should_include_field(camera.get(field)):
+                                camera_data.append([label, str(camera[field])])
+                        
+                        if camera_data:
+                            self._add_enhanced_docx_table(doc, camera_data)
             
-            # VFX Pulls Section
+            # VFX PULLS SECTION
             vfx_pulls = data.get('vfxPulls', {})
             if any(self._should_include_field(vfx_pulls.get(field)) for field in vfx_pulls):
-                doc.add_heading('VFX Pulls Specifications', level=1)
+                section_heading = doc.add_heading('VFX Pulls Specifications', level=1)
+                section_run = section_heading.runs[0]
+                section_run.font.color.rgb = RGBColor(128, 90, 213)
                 
-                vfx_fields = {
+                # Technical specifications
+                technical_data = []
+                technical_fields = {
                     'fileFormat': 'File Format',
                     'compression': 'Compression',
                     'resolution': 'Resolution',
                     'colorSpace': 'Color Space',
                     'bitDepth': 'Bit Depth',
                     'frameHandles': 'Frame Handles',
-                    'framePadding': 'Frame Padding',
+                    'framePadding': 'Frame Padding'
+                }
+                
+                for field, label in technical_fields.items():
+                    if self._should_include_field(vfx_pulls.get(field)):
+                        technical_data.append([label, str(vfx_pulls[field])])
+                
+                if technical_data:
+                    self._add_enhanced_docx_table(doc, technical_data, "Technical Specifications")
+                
+                # Naming conventions
+                naming_data = []
+                naming_fields = {
                     'showId': 'Show ID',
                     'episode': 'Episode',
                     'sequence': 'Sequence',
@@ -870,21 +1022,29 @@ class ExportService:
                     'shotId': 'Shot ID',
                     'plate': 'Plate',
                     'identifier': 'Identifier',
-                    'version': 'Version',
-                    'vfxLutsLink': 'VFX LUTs Link'
+                    'version': 'Version'
                 }
                 
-                for field, label in vfx_fields.items():
+                for field, label in naming_fields.items():
                     if self._should_include_field(vfx_pulls.get(field)):
-                        doc.add_paragraph(f"{label}: {vfx_pulls[field]}")
+                        naming_data.append([label, str(vfx_pulls[field])])
                 
-                doc.add_paragraph()  # Empty line
+                if naming_data:
+                    self._add_enhanced_docx_table(doc, naming_data, "Naming Conventions")
+                
+                # VFX LUTs link
+                if self._should_include_field(vfx_pulls.get('vfxLutsLink')):
+                    link_data = [['VFX LUTs Link', str(vfx_pulls['vfxLutsLink'])]]
+                    self._add_enhanced_docx_table(doc, link_data, "Reference Links")
             
-            # Media Review Section
+            # MEDIA REVIEW SECTION
             media_review = data.get('mediaReview', {})
             if any(self._should_include_field(media_review.get(field)) for field in media_review):
-                doc.add_heading('Media Review Specifications', level=1)
+                section_heading = doc.add_heading('Media Review Specifications', level=1)
+                section_run = section_heading.runs[0]
+                section_run.font.color.rgb = RGBColor(49, 151, 149)
                 
+                media_data = []
                 media_fields = {
                     'container': 'Container',
                     'videoCodec': 'Video Codec',
@@ -892,21 +1052,29 @@ class ExportService:
                     'aspectRatio': 'Aspect Ratio',
                     'letterboxing': 'Letterboxing',
                     'frameRate': 'Frame Rate',
-                    'colorSpace': 'Color Space',
-                    'slateOverlaysLink': 'Slate & Overlays Link'
+                    'colorSpace': 'Color Space'
                 }
                 
                 for field, label in media_fields.items():
                     if self._should_include_field(media_review.get(field)):
-                        doc.add_paragraph(f"{label}: {media_review[field]}")
+                        media_data.append([label, str(media_review[field])])
                 
-                doc.add_paragraph()  # Empty line
+                if media_data:
+                    self._add_enhanced_docx_table(doc, media_data)
+                
+                # Slate & overlays link
+                if self._should_include_field(media_review.get('slateOverlaysLink')):
+                    link_data = [['Slate & Overlays Link', str(media_review['slateOverlaysLink'])]]
+                    self._add_enhanced_docx_table(doc, link_data, "Reference Links")
             
-            # VFX Deliveries Section
+            # VFX DELIVERIES SECTION
             vfx_deliveries = data.get('vfxDeliveries', {})
             if any(self._should_include_field(vfx_deliveries.get(field)) for field in vfx_deliveries):
-                doc.add_heading('VFX Deliveries Specifications', level=1)
+                section_heading = doc.add_heading('VFX Deliveries Specifications', level=1)
+                section_run = section_heading.runs[0]
+                section_run.font.color.rgb = RGBColor(237, 137, 54)
                 
+                delivery_data = []
                 delivery_fields = {
                     'showId': 'Show ID',
                     'episode': 'Episode',
@@ -920,7 +1088,24 @@ class ExportService:
                 
                 for field, label in delivery_fields.items():
                     if self._should_include_field(vfx_deliveries.get(field)):
-                        doc.add_paragraph(f"{label}: {vfx_deliveries[field]}")
+                        delivery_data.append([label, str(vfx_deliveries[field])])
+                
+                if delivery_data:
+                    self._add_enhanced_docx_table(doc, delivery_data)
+            
+            # PROFESSIONAL FOOTER
+            doc.add_paragraph()
+            footer_para = doc.add_paragraph()
+            footer_run = footer_para.add_run('_' * 80)
+            footer_run.font.color.rgb = RGBColor(43, 108, 176)
+            footer_para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            
+            footer_text = doc.add_paragraph(f"This document was generated automatically on {datetime.now().strftime('%B %d, %Y at %H:%M UTC')} • VFX Specifications Exchange System")
+            footer_text.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            footer_text_run = footer_text.runs[0]
+            footer_text_run.font.size = Pt(9)
+            footer_text_run.font.color.rgb = RGBColor(113, 128, 150)
+            footer_text_run.font.italic = True
             
             # Save to buffer
             buffer = io.BytesIO()
@@ -931,6 +1116,81 @@ class ExportService:
         except Exception as e:
             logger.error(f"Error generating DOCX: {str(e)}")
             raise
+
+    def _add_enhanced_docx_table(self, doc, data, subtitle=None):
+        """Add an enhanced table to DOCX with professional styling"""
+        if not data:
+            return
+        
+        if subtitle:
+            subtitle_para = doc.add_paragraph(subtitle)
+            subtitle_run = subtitle_para.runs[0]
+            subtitle_run.font.bold = True
+            subtitle_run.font.size = Pt(12)
+            subtitle_run.font.color.rgb = RGBColor(45, 55, 72)
+        
+        # Create table
+        table = doc.add_table(rows=len(data), cols=2)
+        table.style = 'Table Grid'
+        table.alignment = WD_TABLE_ALIGNMENT.LEFT
+        
+        # Style the table
+        for i, (label, value) in enumerate(data):
+            row = table.rows[i]
+            label_cell = row.cells[0]
+            value_cell = row.cells[1]
+            
+            # Label cell styling
+            label_para = label_cell.paragraphs[0]
+            label_run = label_para.add_run(label)
+            label_run.font.bold = True
+            label_run.font.size = Pt(10)
+            label_run.font.color.rgb = RGBColor(45, 55, 72)
+            
+            # Value cell styling
+            value_para = value_cell.paragraphs[0]
+            value_run = value_para.add_run(str(value))
+            value_run.font.size = Pt(10)
+            value_run.font.color.rgb = RGBColor(45, 55, 72)
+            
+            # Alternating row colors
+            if i % 2 == 0:
+                # Light background for even rows
+                shading_elm_1 = parse_xml(r'<w:shd {} w:fill="F8F9FA"/>'.format(qn('w:shd')))
+                label_cell._tc.get_or_add_tcPr().append(shading_elm_1)
+                shading_elm_2 = parse_xml(r'<w:shd {} w:fill="F8F9FA"/>'.format(qn('w:shd')))
+                value_cell._tc.get_or_add_tcPr().append(shading_elm_2)
+        
+        doc.add_paragraph()  # Empty line after table
+
+    def _add_logo_to_docx(self, doc, logo_data, caption):
+        """Add a logo to DOCX document with caption"""
+        try:
+            # Extract base64 data and convert to image
+            base64_data = logo_data.split(',')[1]
+            image_data = base64.b64decode(base64_data)
+            image_buffer = io.BytesIO(image_data)
+            
+            # Add logo to document
+            logo_para = doc.add_paragraph()
+            logo_run = logo_para.add_run()
+            logo_run.add_picture(image_buffer, width=Inches(2))
+            
+            # Add caption
+            caption_para = doc.add_paragraph(caption)
+            caption_run = caption_para.runs[0]
+            caption_run.font.size = Pt(9)
+            caption_run.font.italic = True
+            caption_run.font.color.rgb = RGBColor(113, 128, 150)
+            
+            doc.add_paragraph()  # Empty line
+        except Exception as e:
+            logger.warning(f"Could not add logo to DOCX: {str(e)}")
+            # Add text indicating logo was not added
+            error_para = doc.add_paragraph(f"[{caption} - Could not display image]")
+            error_run = error_para.runs[0]
+            error_run.font.size = Pt(9)
+            error_run.font.color.rgb = RGBColor(185, 28, 28)
 
     def generate_filename(self, export_type: str, data: Dict[str, Any]) -> str:
         """Generate filename based on export type and data"""
