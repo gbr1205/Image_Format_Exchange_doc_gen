@@ -96,9 +96,14 @@ export const exportAPI = {
     
     // Get filename from headers or create default
     const contentDisposition = response.headers['content-disposition'];
-    const filename = contentDisposition 
+    let filename = contentDisposition 
       ? contentDisposition.split('filename=')[1].replace(/"/g, '')
-      : 'Image_Format_Spec.docx';
+      : 'VFX_Specification.docx';
+    
+    // Add project title and timestamp for unique naming
+    const projectTitle = data.projectInfo?.projectTitle || 'VFX_Spec';
+    const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
+    filename = `${projectTitle.replace(/[^a-zA-Z0-9]/g, '_')}_${timestamp}.docx`;
     
     link.setAttribute('download', filename);
     document.body.appendChild(link);
