@@ -154,24 +154,86 @@ class ExportService:
         return custom_styles
 
     def _create_section_header(self, title, bg_color):
-        """Create a styled section header with background color"""
+        """Create a styled section header with enhanced background and borders"""
         header_style = ParagraphStyle(
             'SectionHeader',
             fontSize=16,
-            spaceBefore=25,
+            spaceBefore=30,
             spaceAfter=15,
             textColor=colors.white,
-            leftIndent=10,
+            leftIndent=15,
             fontName='Helvetica-Bold',
             backColor=bg_color,
-            borderPadding=10
+            borderPadding=12,
+            borderWidth=2,
+            borderColor=colors.HexColor('#2d3748')
         )
         return Paragraph(title, header_style)
 
-    def _create_divider_line(self):
-        """Create a horizontal divider line"""
-        from reportlab.platypus import HRFlowable
-        return HRFlowable(width="100%", thickness=2, color=colors.HexColor('#e2e8f0'))
+    def _create_enhanced_divider_line(self, color=None, thickness=2):
+        """Create an enhanced horizontal divider line with professional styling"""
+        if color is None:
+            color = colors.HexColor('#3182ce')
+        return HRFlowable(width="100%", thickness=thickness, color=color, spaceBefore=10, spaceAfter=10)
+
+    def _create_decorative_border(self):
+        """Create a decorative border element"""
+        return HRFlowable(width="100%", thickness=3, color=colors.HexColor('#e2e8f0'), spaceBefore=5, spaceAfter=5)
+
+    def _create_logo_with_text_table(self, text_data, logo_data, logo_label):
+        """Create a table that displays text with logo next to it"""
+        table_data = []
+        
+        for text_item in text_data:
+            label, value = text_item
+            if label == logo_label and logo_data:
+                # Create a table row with text and logo
+                logo_img = self._get_logo_image(logo_data, height=0.8*inch, width=1.2*inch)
+                if logo_img:
+                    table_data.append([label, value, logo_img])
+                else:
+                    table_data.append([label, value, ""])
+            else:
+                table_data.append([label, value, ""])
+        
+        if table_data:
+            # Use different column widths if logos are present
+            has_logos = any(len(row) > 2 and row[2] != "" for row in table_data)
+            if has_logos:
+                col_widths = [2*inch, 2.5*inch, 1.5*inch]
+                table = Table(table_data, colWidths=col_widths)
+            else:
+                # Standard two-column layout
+                table_data = [[row[0], row[1]] for row in table_data]
+                col_widths = [2.5*inch, 3.5*inch]
+                table = Table(table_data, colWidths=col_widths)
+            
+            # Enhanced table styling with professional borders
+            table_style = [
+                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+                ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+                ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
+                ('FONTSIZE', (0, 0), (-1, -1), 11),
+                ('BOTTOMPADDING', (0, 0), (-1, -1), 10),
+                ('TOPPADDING', (0, 0), (-1, -1), 10),
+                ('LEFTPADDING', (0, 0), (-1, -1), 15),
+                ('RIGHTPADDING', (0, 0), (-1, -1), 15),
+                ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#cbd5e0')),
+                ('ROWBACKGROUNDS', (0, 0), (-1, -1), [colors.white, colors.HexColor('#f8f9fa')]),
+                ('LINEBELOW', (0, 0), (-1, 0), 2, colors.HexColor('#3182ce')),  # Header underline
+            ]
+            
+            # Special styling for logo cells
+            if has_logos:
+                table_style.extend([
+                    ('ALIGN', (2, 0), (2, -1), 'CENTER'),
+                    ('VALIGN', (2, 0), (2, -1), 'MIDDLE'),
+                ])
+            
+            table.setStyle(TableStyle(table_style))
+            return table
+        return None
 
     def _should_include_field(self, value: Any) -> bool:
         """Check if field should be included (not empty)"""
