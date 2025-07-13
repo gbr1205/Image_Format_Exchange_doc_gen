@@ -549,61 +549,73 @@ class ExportService:
                 story.append(self._create_decorative_border())
                 story.append(Spacer(1, 15))
             
-            # CAMERA FORMATS SECTION with cool green background
+            # CAMERA FORMATS SECTION with enhanced styling
             camera_formats = data.get('cameraFormats', [])
             if camera_formats:
                 section_header = self._create_section_header("CAMERA FORMATS", colors.HexColor('#38a169'))
                 story.append(KeepTogether([section_header]))
-                story.append(Spacer(1, 10))
+                story.append(Spacer(1, 15))
                 
                 for i, camera in enumerate(camera_formats, 1):
                     if any(self._should_include_field(camera.get(field)) for field in camera):
-                        # Camera subsection header
+                        # Enhanced camera subsection header
                         subsection_style = ParagraphStyle(
                             'CameraSubsection',
-                            fontSize=12,
+                            fontSize=13,
                             spaceBefore=15,
-                            spaceAfter=8,
-                            textColor=colors.HexColor('#2d3748'),
-                            fontName='Helvetica-Bold'
+                            spaceAfter=10,
+                            textColor=colors.HexColor('#1a365d'),
+                            fontName='Helvetica-Bold',
+                            borderWidth=1,
+                            borderPadding=8,
+                            borderColor=colors.HexColor('#38a169'),
+                            backColor=colors.HexColor('#f0fff4')
                         )
-                        story.append(Paragraph(f"Camera {i}: {camera.get('cameraId', 'Unknown')}", subsection_style))
+                        story.append(Paragraph(f"Camera Configuration {i}: {camera.get('cameraId', 'Unknown')}", subsection_style))
                         
                         camera_data = []
-                        if self._should_include_field(camera.get('sourceCamera')):
-                            camera_data.append(['Source Camera:', camera['sourceCamera']])
-                        if self._should_include_field(camera.get('codec')):
-                            camera_data.append(['Codec:', camera['codec']])
-                        if self._should_include_field(camera.get('sensorMode')):
-                            camera_data.append(['Sensor Mode:', camera['sensorMode']])
-                        if self._should_include_field(camera.get('lensSqueezeeFactor')):
-                            camera_data.append(['Lens Squeeze Factor:', camera['lensSqueezeeFactor']])
-                        if self._should_include_field(camera.get('colorSpace')):
-                            camera_data.append(['Color Space:', camera['colorSpace']])
+                        camera_fields = {
+                            'sourceCamera': 'Source Camera:',
+                            'codec': 'Codec:',
+                            'sensorMode': 'Sensor Mode:',
+                            'lensSqueezeeFactor': 'Lens Squeeze Factor:',
+                            'colorSpace': 'Color Space/Transfer Function:'
+                        }
+                        
+                        for field, label in camera_fields.items():
+                            if self._should_include_field(camera.get(field)):
+                                camera_data.append([label, str(camera[field])])
                         
                         if camera_data:
-                            table = self._create_styled_table(camera_data, [2*inch, 4*inch])
+                            table = self._create_styled_table(camera_data, [2.2*inch, 3.8*inch])
                             story.append(table)
                             story.append(Spacer(1, 15))
                 
-                story.append(Spacer(1, 10))
+                story.append(self._create_decorative_border())
+                story.append(Spacer(1, 15))
             
-            # VFX PULLS SECTION with cool purple background
+            # VFX PULLS SECTION with enhanced purple styling
             vfx_pulls = data.get('vfxPulls', {})
             if any(self._should_include_field(vfx_pulls.get(field)) for field in vfx_pulls):
                 section_header = self._create_section_header("VFX PULLS SPECIFICATIONS", colors.HexColor('#805ad5'))
                 story.append(KeepTogether([section_header]))
-                story.append(Spacer(1, 10))
+                story.append(Spacer(1, 15))
                 
-                vfx_data = []
-                vfx_fields = {
+                # Group VFX pulls data for better organization
+                technical_data = []
+                naming_data = []
+                
+                technical_fields = {
                     'fileFormat': 'File Format:',
                     'compression': 'Compression:',
                     'resolution': 'Resolution:',
                     'colorSpace': 'Color Space:',
                     'bitDepth': 'Bit Depth:',
                     'frameHandles': 'Frame Handles:',
-                    'framePadding': 'Frame Padding:',
+                    'framePadding': 'Frame Padding:'
+                }
+                
+                naming_fields = {
                     'showId': 'Show ID:',
                     'episode': 'Episode:',
                     'sequence': 'Sequence:',
@@ -611,25 +623,49 @@ class ExportService:
                     'shotId': 'Shot ID:',
                     'plate': 'Plate:',
                     'identifier': 'Identifier:',
-                    'version': 'Version:',
-                    'vfxLutsLink': 'VFX LUTs Link:'
+                    'version': 'Version:'
                 }
                 
-                for field, label in vfx_fields.items():
+                for field, label in technical_fields.items():
                     if self._should_include_field(vfx_pulls.get(field)):
-                        vfx_data.append([label, str(vfx_pulls[field])])
+                        technical_data.append([label, str(vfx_pulls[field])])
                 
-                if vfx_data:
-                    table = self._create_styled_table(vfx_data, [2*inch, 4*inch])
+                for field, label in naming_fields.items():
+                    if self._should_include_field(vfx_pulls.get(field)):
+                        naming_data.append([label, str(vfx_pulls[field])])
+                
+                if technical_data:
+                    # Technical specifications subsection
+                    subsection_header = Paragraph("Technical Specifications", self.custom_styles['subsection'])
+                    story.append(subsection_header)
+                    table = self._create_styled_table(technical_data, [2.2*inch, 3.8*inch])
                     story.append(table)
-                    story.append(Spacer(1, 25))
+                    story.append(Spacer(1, 15))
+                
+                if naming_data:
+                    # Naming conventions subsection
+                    subsection_header = Paragraph("Naming Conventions", self.custom_styles['subsection'])
+                    story.append(subsection_header)
+                    table = self._create_styled_table(naming_data, [2.2*inch, 3.8*inch])
+                    story.append(table)
+                    story.append(Spacer(1, 15))
+                
+                # Add VFX LUTs link if available
+                if self._should_include_field(vfx_pulls.get('vfxLutsLink')):
+                    link_data = [['VFX LUTs Link:', str(vfx_pulls['vfxLutsLink'])]]
+                    table = self._create_styled_table(link_data, [2.2*inch, 3.8*inch])
+                    story.append(table)
+                    story.append(Spacer(1, 15))
+                
+                story.append(self._create_decorative_border())
+                story.append(Spacer(1, 15))
             
-            # MEDIA REVIEW SECTION with cool teal background
+            # MEDIA REVIEW SECTION with enhanced teal styling
             media_review = data.get('mediaReview', {})
             if any(self._should_include_field(media_review.get(field)) for field in media_review):
                 section_header = self._create_section_header("MEDIA REVIEW SPECIFICATIONS", colors.HexColor('#319795'))
                 story.append(KeepTogether([section_header]))
-                story.append(Spacer(1, 10))
+                story.append(Spacer(1, 15))
                 
                 media_data = []
                 media_fields = {
@@ -639,8 +675,7 @@ class ExportService:
                     'aspectRatio': 'Aspect Ratio:',
                     'letterboxing': 'Letterboxing:',
                     'frameRate': 'Frame Rate:',
-                    'colorSpace': 'Color Space:',
-                    'slateOverlaysLink': 'Slate & Overlays Link:'
+                    'colorSpace': 'Color Space:'
                 }
                 
                 for field, label in media_fields.items():
@@ -648,16 +683,26 @@ class ExportService:
                         media_data.append([label, str(media_review[field])])
                 
                 if media_data:
-                    table = self._create_styled_table(media_data, [2*inch, 4*inch])
+                    table = self._create_styled_table(media_data, [2.2*inch, 3.8*inch])
                     story.append(table)
-                    story.append(Spacer(1, 25))
+                    story.append(Spacer(1, 15))
+                
+                # Add slate & overlays link if available
+                if self._should_include_field(media_review.get('slateOverlaysLink')):
+                    link_data = [['Slate & Overlays Link:', str(media_review['slateOverlaysLink'])]]
+                    table = self._create_styled_table(link_data, [2.2*inch, 3.8*inch])
+                    story.append(table)
+                    story.append(Spacer(1, 15))
+                
+                story.append(self._create_decorative_border())
+                story.append(Spacer(1, 15))
             
-            # VFX DELIVERIES SECTION with cool orange background
+            # VFX DELIVERIES SECTION with enhanced orange styling
             vfx_deliveries = data.get('vfxDeliveries', {})
             if any(self._should_include_field(vfx_deliveries.get(field)) for field in vfx_deliveries):
                 section_header = self._create_section_header("VFX DELIVERIES SPECIFICATIONS", colors.HexColor('#ed8936'))
                 story.append(KeepTogether([section_header]))
-                story.append(Spacer(1, 10))
+                story.append(Spacer(1, 15))
                 
                 delivery_data = []
                 delivery_fields = {
@@ -676,14 +721,29 @@ class ExportService:
                         delivery_data.append([label, str(vfx_deliveries[field])])
                 
                 if delivery_data:
-                    table = self._create_styled_table(delivery_data, [2*inch, 4*inch])
+                    table = self._create_styled_table(delivery_data, [2.2*inch, 3.8*inch])
                     story.append(table)
                     story.append(Spacer(1, 25))
+                
+                story.append(self._create_decorative_border())
             
-            # Footer divider
-            story.append(self._create_divider_line())
+            # PROFESSIONAL FOOTER
+            story.append(Spacer(1, 30))
+            story.append(self._create_enhanced_divider_line(colors.HexColor('#2b6cb0'), 3))
             
-            # Build PDF
+            # Footer with document info
+            footer_text = f"This document was generated automatically on {datetime.now().strftime('%B %d, %Y at %H:%M UTC')} • VFX Specifications Exchange System"
+            footer_style = ParagraphStyle(
+                'FooterStyle',
+                fontSize=9,
+                textColor=colors.HexColor('#718096'),
+                alignment=1,
+                fontName='Helvetica-Oblique',
+                spaceBefore=10
+            )
+            story.append(Paragraph(footer_text, footer_style))
+            
+            # Build PDF with enhanced error handling
             doc.build(story)
             buffer.seek(0)
             return buffer.getvalue()
