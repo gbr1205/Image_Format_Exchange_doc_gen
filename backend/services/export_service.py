@@ -1156,9 +1156,9 @@ class ExportService:
             # Alternating row colors
             if i % 2 == 0:
                 # Light background for even rows
-                shading_elm_1 = parse_xml(r'<w:shd w:val="clear" w:color="auto" w:fill="F8F9FA"/>')
+                shading_elm_1 = parse_xml(r'<w:shd xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" w:val="clear" w:color="auto" w:fill="F8F9FA"/>')
                 label_cell._tc.get_or_add_tcPr().append(shading_elm_1)
-                shading_elm_2 = parse_xml(r'<w:shd w:val="clear" w:color="auto" w:fill="F8F9FA"/>')
+                shading_elm_2 = parse_xml(r'<w:shd xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" w:val="clear" w:color="auto" w:fill="F8F9FA"/>')
                 value_cell._tc.get_or_add_tcPr().append(shading_elm_2)
         
         doc.add_paragraph()  # Empty line after table
