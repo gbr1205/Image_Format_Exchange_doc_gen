@@ -44,41 +44,53 @@ class ExportService:
         """Create custom styles for PDF generation with enhanced styling"""
         custom_styles = {}
         
-        # Enhanced title style
+        # Enhanced title style with gradient-like effect
         custom_styles['title'] = ParagraphStyle(
             'CustomTitle',
             parent=self.styles['Heading1'],
-            fontSize=24,
-            spaceAfter=30,
+            fontSize=26,
+            spaceAfter=20,
+            spaceBefore=10,
             textColor=colors.HexColor('#1a365d'),  # Dark blue
             alignment=1,  # Center alignment
-            fontName='Helvetica-Bold'
+            fontName='Helvetica-Bold',
+            borderWidth=2,
+            borderPadding=12,
+            borderColor=colors.HexColor('#3182ce'),
+            backColor=colors.HexColor('#f7fafc')  # Light background
         )
         
-        # Subtitle style
+        # Professional subtitle style
         custom_styles['subtitle'] = ParagraphStyle(
             'CustomSubtitle',
             parent=self.styles['Normal'],
             fontSize=14,
-            spaceAfter=20,
+            spaceAfter=25,
             textColor=colors.HexColor('#4a5568'),  # Medium gray
             alignment=1,
-            fontName='Helvetica'
+            fontName='Helvetica-Oblique',
+            borderWidth=1,
+            borderPadding=8,
+            borderColor=colors.HexColor('#e2e8f0'),
+            backColor=colors.HexColor('#ffffff')
         )
         
-        # Section header style with cool colors
+        # Enhanced section header with professional gradient effect
         custom_styles['section'] = ParagraphStyle(
             'CustomSection',
             parent=self.styles['Heading2'],
             fontSize=16,
-            spaceBefore=25,
+            spaceBefore=30,
             spaceAfter=15,
             textColor=colors.white,
-            leftIndent=10,
-            fontName='Helvetica-Bold'
+            leftIndent=15,
+            fontName='Helvetica-Bold',
+            borderWidth=2,
+            borderPadding=12,
+            borderColor=colors.HexColor('#2d3748')
         )
         
-        # Subsection style
+        # Enhanced subsection style
         custom_styles['subsection'] = ParagraphStyle(
             'CustomSubsection',
             parent=self.styles['Heading3'],
@@ -86,18 +98,57 @@ class ExportService:
             spaceBefore=20,
             spaceAfter=12,
             textColor=colors.HexColor('#2d3748'),
-            leftIndent=5,
-            fontName='Helvetica-Bold'
+            leftIndent=10,
+            fontName='Helvetica-Bold',
+            borderWidth=1,
+            borderPadding=8,
+            borderColor=colors.HexColor('#cbd5e0'),
+            backColor=colors.HexColor('#f7fafc')
         )
         
-        # Body text style
+        # Professional body text with subtle styling
         custom_styles['body'] = ParagraphStyle(
             'CustomBody',
             parent=self.styles['Normal'],
-            fontSize=10,
-            spaceAfter=6,
-            leftIndent=20,
-            fontName='Helvetica'
+            fontSize=11,
+            spaceAfter=8,
+            leftIndent=25,
+            fontName='Helvetica',
+            textColor=colors.HexColor('#2d3748')
+        )
+        
+        # Company info style
+        custom_styles['company'] = ParagraphStyle(
+            'CompanyInfo',
+            fontSize=20,
+            textColor=colors.HexColor('#1a365d'),
+            fontName='Helvetica-Bold',
+            alignment=1,
+            spaceBefore=10,
+            spaceAfter=5
+        )
+        
+        # Contact info style
+        custom_styles['contact'] = ParagraphStyle(
+            'ContactInfo',
+            fontSize=11,
+            textColor=colors.HexColor('#4a5568'),
+            fontName='Helvetica',
+            alignment=1,
+            spaceAfter=3
+        )
+        
+        # Date style with enhanced formatting
+        custom_styles['date'] = ParagraphStyle(
+            'DateStyle',
+            fontSize=11,
+            textColor=colors.HexColor('#718096'),
+            alignment=1,
+            fontName='Helvetica-Oblique',
+            borderWidth=1,
+            borderPadding=6,
+            borderColor=colors.HexColor('#e2e8f0'),
+            backColor=colors.HexColor('#f7fafc')
         )
         
         return custom_styles
