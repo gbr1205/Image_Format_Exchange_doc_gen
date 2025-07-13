@@ -245,8 +245,8 @@ class ExportService:
             return len(value) > 0
         return True
 
-    def _get_logo_image(self, logo_data: str) -> Optional[Image]:
-        """Convert base64 logo data to ReportLab Image"""
+    def _get_logo_image(self, logo_data: str, height=1*inch, width=2*inch) -> Optional[Image]:
+        """Convert base64 logo data to ReportLab Image with custom sizing"""
         try:
             if logo_data and logo_data.startswith('data:image'):
                 # Extract base64 data
@@ -254,13 +254,34 @@ class ExportService:
                 image_data = base64.b64decode(base64_data)
                 image_buffer = io.BytesIO(image_data)
                 
-                # Create ReportLab Image
+                # Create ReportLab Image with custom dimensions
                 img = Image(image_buffer)
-                img.drawHeight = 1 * inch
-                img.drawWidth = 2 * inch
+                img.drawHeight = height
+                img.drawWidth = width
+                img.hAlign = 'CENTER'
                 return img
         except Exception as e:
             logger.error(f"Error processing logo: {str(e)}")
+        return None
+
+    def _get_logo_from_data(self, data: Dict[str, Any], logo_path: str) -> Optional[str]:
+        """Extract logo data from nested dictionary path"""
+        try:
+            keys = logo_path.split('.')
+            current = data
+            for key in keys:
+                if isinstance(current, dict) and key in current:
+                    current = current[key]
+                else:
+                    return None
+            
+            # Handle both old format (string) and new format (dict with dataUrl)
+            if isinstance(current, dict) and 'dataUrl' in current:
+                return current['dataUrl']
+            elif isinstance(current, str):
+                return current
+        except Exception as e:
+            logger.error(f"Error extracting logo from {logo_path}: {str(e)}")
         return None
 
     def _create_styled_table(self, data, col_widths, bg_color=None):
