@@ -21,6 +21,7 @@ from PIL import Image
 from models.vfx_spec import VFXSpec, VFXSpecCreate, VFXSpecUpdate, Template, TemplateCreate
 from services.vfx_spec_service import VFXSpecService
 from services.export_service import ExportService
+from constants import DROPDOWN_OPTIONS
 
 # Configuration
 ROOT_DIR = Path(__file__).parent
